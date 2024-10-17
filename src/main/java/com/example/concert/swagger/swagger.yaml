@@ -1,0 +1,273 @@
+---
+openapi: 3.0.1
+info:
+  title: Concert Ticket API
+  description: API documentation for the Concert Ticket system
+  version: '1.0'
+servers:
+  - url: http://localhost:8080
+    description: Generated server url
+paths:
+  "/waitingQueue/order":
+    post:
+      tags:
+        - waiting-queue-controller
+      operationId: retrieveOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/OrderRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/OrderResponse"
+  "/token/create":
+    post:
+      tags:
+        - token-controller
+      operationId: createToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/TokenRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/TokenResponse"
+  "/seats/available":
+    post:
+      tags:
+        - seat-controller
+      operationId: retrieveAllAvailableSeats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/AvailableSeatsRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/SeatsResponse"
+  "/reservation/create":
+    post:
+      tags:
+        - reservation-controller
+      operationId: createReservation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ReservationRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ReservationResponse"
+  "/payment/create":
+    post:
+      tags:
+        - payment-controller
+      operationId: createPayment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/PaymentRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/PaymentResponse"
+  "/calendars/available":
+    post:
+      tags:
+        - calendar-controller
+      operationId: retrieveAllAvailableDates
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CalendarRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/CalendarResponse"
+  "/balance/retrieve":
+    post:
+      tags:
+        - balance-controller
+      operationId: retrieveBalance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/BalanceRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/BalanceResponse"
+  "/balance/charge":
+    post:
+      tags:
+        - balance-controller
+      operationId: chargeBalance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ChargeRequest"
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            "*/*":
+              schema:
+                "$ref": "#/components/schemas/ChargeResponse"
+components:
+  schemas:
+    OrderRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+    OrderResponse:
+      type: object
+    TokenRequest:
+      type: object
+      properties:
+        uuid:
+          type: integer
+          format: int64
+    TokenResponse:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+    AvailableSeatsRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+        concertId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+    SeatResponse:
+      type: object
+    SeatsResponse:
+      type: object
+      properties:
+        availableSeats:
+          type: array
+          items:
+            "$ref": "#/components/schemas/SeatResponse"
+    ReservationRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+        uuid:
+          type: integer
+          format: int64
+        concertId:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        seatNumber:
+          type: integer
+          format: int64
+    ReservationResponse:
+      type: object
+    PaymentRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+        uuid:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: int64
+    PaymentResponse:
+      type: object
+    CalendarRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+        concertId:
+          type: integer
+          format: int64
+    CalendarResponse:
+      type: object
+      properties:
+        availableDates:
+          type: array
+          items:
+            type: string
+            format: date
+    BalanceRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+        uuid:
+          type: integer
+          format: int64
+    BalanceResponse:
+      type: object
+    ChargeRequest:
+      type: object
+      properties:
+        tokenId:
+          type: integer
+          format: int64
+        uuid:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: int64
+    ChargeResponse:
+      type: object

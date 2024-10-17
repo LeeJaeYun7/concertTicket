@@ -2,16 +2,20 @@ package com.example.concert.reservation.dto;
 
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 public class ReservationRequest {
 
-    private final long uuid;
-    private final long seatId;
-    private final long price;
+    private final String token;
+    private final UUID uuid;
+    private final long concertScheduleId;
+    private final long seatNumber;
 
-    public ReservationRequest(long uuid, long seatId, long price){
+    public ReservationRequest(String token, UUID uuid, long concertScheduleId, long seatNumber){
+        this.token = token;
         this.uuid = uuid;
-        this.seatId = seatId;
-        this.price = price;
+        this.concertScheduleId = concertScheduleId;
+        this.seatNumber = seatNumber;
     }
 }

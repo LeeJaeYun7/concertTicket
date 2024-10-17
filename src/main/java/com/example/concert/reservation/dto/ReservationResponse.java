@@ -1,19 +1,33 @@
 package com.example.concert.reservation.dto;
 
 import lombok.Builder;
+import lombok.Getter;
 
+import java.time.LocalDateTime;
+
+@Getter
 public class ReservationResponse {
 
-    private final boolean isSuccess;
+    private final String name;
+
+    private final String concertName;
+    private final LocalDateTime dateTime;
+    private final long price;
 
     @Builder
-    public ReservationResponse(boolean isSuccess){
-        this.isSuccess = isSuccess;
+    public ReservationResponse(String name, String concertName, LocalDateTime dateTime, long price){
+        this.name = name;
+        this.concertName = concertName;
+        this.dateTime = dateTime;
+        this.price = price;
     }
 
-    public static ReservationResponse of(boolean isSuccess){
+    public static ReservationResponse of(String name, String concertName, LocalDateTime dateTime, long price){
         return ReservationResponse.builder()
-                                  .isSuccess(isSuccess)
+                                  .name(name)
+                                  .concertName(concertName)
+                                  .dateTime(dateTime)
+                                  .price(price)
                                   .build();
     }
 }
