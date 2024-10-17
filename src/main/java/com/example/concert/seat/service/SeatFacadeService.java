@@ -4,6 +4,7 @@ import com.example.concert.concertschedule.service.ConcertScheduleService;
 import com.example.concert.member.service.MemberService;
 import com.example.concert.seat.domain.Seat;
 import com.example.concert.seat.domain.SeatStatus;
+import com.example.concert.utils.TimeProvider;
 import com.example.concert.utils.TokenValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +16,15 @@ import java.util.UUID;
 @Service
 public class SeatFacadeService {
 
+    private final TimeProvider timeProvider;
     private final TokenValidator tokenValidator;
     private final MemberService memberService;
     private final ConcertScheduleService concertScheduleService;
 
     private final SeatService seatService;
 
-    public SeatFacadeService(TokenValidator tokenValidator, MemberService memberService, ConcertScheduleService concertScheduleService, SeatService seatService){
+    public SeatFacadeService(TimeProvider timeProvider, TokenValidator tokenValidator, MemberService memberService, ConcertScheduleService concertScheduleService, SeatService seatService){
+        this.timeProvider = timeProvider;
         this.tokenValidator = tokenValidator;
         this.memberService = memberService;
         this.concertScheduleService = concertScheduleService;
@@ -37,9 +40,11 @@ public class SeatFacadeService {
 
         boolean isReservable = validateSeat(concertScheduleId, number);
 
-        if(isReservable){
-            seatService.changeUpdatedAt(concertScheduleId, number);
+        if(!isReservable){
+            throw new Exception();
         }
+
+        seatService.changeUpdatedAt(concertScheduleId, number);
     }
 
     private void validateMember(UUID uuid) throws Exception {
@@ -64,7 +69,7 @@ public class SeatFacadeService {
     }
 
     private boolean isFiveMinutesPassed(LocalDateTime updatedAt) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = timeProvider.now();
         Duration duration = Duration.between(updatedAt, now);
         return duration.toMinutes() >= 5;
     }

@@ -11,6 +11,7 @@ import com.example.concert.reservation.dto.ReservationResponse;
 import com.example.concert.seat.domain.Seat;
 import com.example.concert.seat.domain.SeatStatus;
 import com.example.concert.seat.service.SeatService;
+import com.example.concert.utils.TimeProvider;
 import com.example.concert.utils.TokenValidator;
 import com.example.concert.waitingQueue.service.WaitingQueueService;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ import java.util.UUID;
 @Service
 public class ReservationFacadeService {
 
+    private final TimeProvider timeProvider;
+
     private final TokenValidator tokenValidator;
     private final MemberService memberService;
     private final ReservationService reservationService;
@@ -34,7 +37,8 @@ public class ReservationFacadeService {
 
     private final WaitingQueueService waitingQueueService;
 
-    public ReservationFacadeService(TokenValidator tokenValidator, MemberService memberService, ReservationService reservationService, SeatService seatService, ConcertService concertService, ConcertScheduleService concertScheduleService, PaymentService paymentService, WaitingQueueService waitingQueueService){
+    public ReservationFacadeService(TimeProvider timProvider, TokenValidator tokenValidator, MemberService memberService, ReservationService reservationService, SeatService seatService, ConcertService concertService, ConcertScheduleService concertScheduleService, PaymentService paymentService, WaitingQueueService waitingQueueService){
+        this.timeProvider = timProvider;
         this.tokenValidator = tokenValidator;
         this.memberService = memberService;
         this.reservationService = reservationService;
@@ -111,7 +115,7 @@ public class ReservationFacadeService {
     }
 
     private boolean isFiveMinutesPassed(LocalDateTime updatedAt) {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = timeProvider.now();
         Duration duration = Duration.between(updatedAt, now);
         return duration.toMinutes() >= 5;
     }

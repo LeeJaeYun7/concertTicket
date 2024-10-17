@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -124,6 +125,19 @@ public class MemberServiceTest {
 
             sut.decreaseBalance(uuid, 60);
             assertEquals(member.getBalance(), 40);
+        }
+
+        @Test
+        @DisplayName("uuid와 콘서트 가격이 전달될 때, 멤버의 잔액보다 콘서트 가격이 크면 Exception을 반환한다")
+        void uuid와_콘서트_가격이_전달될때_멤버의_잔액보다_콘서트_가격이_크면_Exception을_반환한다() throws Exception {
+            String name = "Tom Cruise";
+            Member member = Member.of(name);
+            member.updateBalance(50000);
+            UUID uuid = member.getUuid();
+
+            given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
+
+            assertThrows(Exception.class, () -> sut.decreaseBalance(uuid, 60000));
         }
     }
 }

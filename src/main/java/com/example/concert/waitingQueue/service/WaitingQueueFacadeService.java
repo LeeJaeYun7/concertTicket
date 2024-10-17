@@ -45,7 +45,7 @@ public class WaitingQueueFacadeService {
         WaitingQueue newWaitingQueue = WaitingQueue.of(concert, uuid, newToken, end+1);
         waitingQueueService.save(newWaitingQueue);
 
-        return TokenResponse.of(newToken);
+        return TokenResponse.of(newToken, end+1);
     }
 
     private void checkQueueExists(long concertId, UUID uuid) throws Exception {
