@@ -30,7 +30,7 @@ public class ConcertServiceTest {
     class 콘서트ID로_콘서트를_가져올때 {
         @Test
         @DisplayName("콘서트를 가져온다")
-        void 콘서트를_가져온다() throws Exception {
+        void 콘서트를_가져온다() {
             Concert concert = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
             long concertId = 1L;
             given(concertRepository.findById(concertId)).willReturn(Optional.of(concert));

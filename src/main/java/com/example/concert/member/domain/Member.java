@@ -1,5 +1,8 @@
 package com.example.concert.member.domain;
 
+import com.example.concert.common.CustomException;
+import com.example.concert.common.ErrorCode;
+import com.example.concert.common.Loggable;
 import com.example.concert.global.entity.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -40,7 +43,10 @@ public class Member extends BaseTimeEntity {
                      .balance(0)
                      .build();
     }
-    public void updateBalance(long balance){
+    public void updateBalance(long balance) {
+        if (balance < 0) {
+            throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE, Loggable.ALWAYS);
+        }
         this.balance = balance;
     }
 }

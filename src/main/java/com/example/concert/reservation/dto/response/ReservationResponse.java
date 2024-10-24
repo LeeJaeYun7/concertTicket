@@ -1,4 +1,4 @@
-package com.example.concert.reservation.dto;
+package com.example.concert.reservation.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -11,15 +11,19 @@ import java.util.UUID;
 public class MemberResponse {
 
     private UUID uuid;
+    private String name;
 
     @Builder
-    public MemberResponse(UUID uuid){
+    public MemberResponse(UUID uuid, String name){
+
         this.uuid = uuid;
+        this.name = name;
     }
 
-    public static MemberResponse of(UUID uuid){
+    public static MemberResponse of(UUID uuid, String name){
         return MemberResponse.builder()
                              .uuid(uuid)
+                             .name(name)
                              .build();
     }
 }

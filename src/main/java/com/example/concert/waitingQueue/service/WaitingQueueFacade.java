@@ -1,10 +1,13 @@
 package com.example.concert.waitingQueue.service;
 
+import com.example.concert.common.CustomException;
+import com.example.concert.common.ErrorCode;
+import com.example.concert.common.Loggable;
 import com.example.concert.concert.domain.Concert;
 import com.example.concert.concert.service.ConcertService;
 import com.example.concert.utils.RandomStringGenerator;
 import com.example.concert.waitingQueue.domain.WaitingQueue;
-import com.example.concert.waitingQueue.dto.response.TokenResponse;
+import com.example.concert.waitingQueue.vo.TokenVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,18 +18,18 @@ import java.util.UUID;
 import static java.lang.Math.max;
 
 @Service
-public class WaitingQueueFacadeService {
+public class WaitingQueueFacade {
 
     private final ConcertService concertService;
     private final WaitingQueueService waitingQueueService;
 
-    public WaitingQueueFacadeService(ConcertService concertService, WaitingQueueService waitingQueueService){
+    public WaitingQueueFacade(ConcertService concertService, WaitingQueueService waitingQueueService){
         this.concertService = concertService;
         this.waitingQueueService = waitingQueueService;
     }
 
     @Transactional
-    public TokenResponse createToken(long concertId, UUID uuid) throws Exception {
+    public TokenVO createToken(long concertId, UUID uuid) {
 
         checkQueueExists(concertId, uuid);
 
@@ -45,10 +48,10 @@ public class WaitingQueueFacadeService {
         WaitingQueue newWaitingQueue = WaitingQueue.of(concert, uuid, newToken, end+1);
         waitingQueueService.save(newWaitingQueue);
 
-        return TokenResponse.of(newToken, end+1);
+        return TokenVO.of(newToken, end+1);
     }
 
-    private void checkQueueExists(long concertId, UUID uuid) throws Exception {
+    private void checkQueueExists(long concertId, UUID uuid) {
         Optional<WaitingQueue> tokenOpt = waitingQueueService.getByUuid(uuid);
 
         // 대기열에 uuid로 만든 토큰이 없는 경우
@@ -60,7 +63,7 @@ public class WaitingQueueFacadeService {
 
         // 같은 대기열에 uuid로 만든 토큰이 존재하는 경우
         if(token.getConcert().getId() == concertId){
-            throw new Exception();
+            throw new CustomException(ErrorCode.TOKEN_ALREADY_EXISTS, Loggable.NEVER);
         }
 
         // 다른 대기열에 uuid로 만든 토큰이 존재하는 경우, 삭제해준다

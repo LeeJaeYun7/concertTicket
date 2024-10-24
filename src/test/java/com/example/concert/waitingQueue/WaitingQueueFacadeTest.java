@@ -1,13 +1,14 @@
 package com.example.concert.waitingQueue;
 
+import com.example.concert.common.CustomException;
 import com.example.concert.concert.domain.Concert;
 import com.example.concert.concert.fixtures.ConcertFixtureFactory;
 import com.example.concert.concert.service.ConcertService;
 import com.example.concert.utils.RandomStringGenerator;
 import com.example.concert.waitingQueue.domain.WaitingQueue;
-import com.example.concert.waitingQueue.dto.response.TokenResponse;
-import com.example.concert.waitingQueue.service.WaitingQueueFacadeService;
+import com.example.concert.waitingQueue.service.WaitingQueueFacade;
 import com.example.concert.waitingQueue.service.WaitingQueueService;
+import com.example.concert.waitingQueue.vo.TokenVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class WaitingQueueFacadeServiceTest {
+public class WaitingQueueFacadeTest {
 
     @Mock
     private ConcertService concertService;
@@ -37,7 +38,7 @@ public class WaitingQueueFacadeServiceTest {
     private WaitingQueueService waitingQueueService;
 
     @InjectMocks
-    private WaitingQueueFacadeService sut;
+    private WaitingQueueFacade sut;
 
 
 
@@ -47,7 +48,7 @@ public class WaitingQueueFacadeServiceTest {
 
         @Test
         @DisplayName("어떤 대기열에도 토큰이 없다면, 토큰을 생성한다")
-        void 어떤_대기열에도_토큰이_없다면_토큰을_생성한다() throws Exception {
+        void 어떤_대기열에도_토큰이_없다면_토큰을_생성한다() {
             UUID uuid = UUID.randomUUID();
             Concert concert1 = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
 
@@ -63,15 +64,15 @@ public class WaitingQueueFacadeServiceTest {
             given(concertService.getConcertById(1L)).willReturn(concert1);
             given(waitingQueueService.getAllByConcertId(1L)).willReturn(List.of(element1, element2));
 
-            TokenResponse tokenResponse = sut.createToken(1L, uuid);
+            TokenVO tokenVO = sut.createToken(1L, uuid);
 
-            assertEquals(3, tokenResponse.getWaitingNumber());
+            assertEquals(3, tokenVO.getWaitingNumber());
             verify(waitingQueueService, times(1)).save(any(WaitingQueue.class));
         }
 
         @Test
         @DisplayName("같은 대기열에 토큰이 있다면, 토큰을 생성하지 않는다")
-        void 같은_대기열에_토큰이_있다면_토큰을_생성하지_않는다() throws Exception {
+        void 같은_대기열에_토큰이_있다면_토큰을_생성하지_않는다() {
 
             Concert concert = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
             UUID uuid = UUID.randomUUID();
@@ -80,12 +81,12 @@ public class WaitingQueueFacadeServiceTest {
             WaitingQueue element = WaitingQueue.of(concert, uuid, token, 1);
             given(waitingQueueService.getByUuid(uuid)).willReturn(Optional.of(element));
 
-            assertThrows(Exception.class, ()-> sut.createToken(1L, uuid));
+            assertThrows(CustomException.class, ()-> sut.createToken(1L, uuid));
         }
 
         @Test
         @DisplayName("다른 대기열에 토큰이 있다면, 해당 토큰을 삭제하고, 현재 대기열에 토큰을 생성한다")
-        void 다른_대기열에_토큰이_있다면_해당_토큰을_삭제하고_현재_대기열에_토큰을_생성한다() throws Exception {
+        void 다른_대기열에_토큰이_있다면_해당_토큰을_삭제하고_현재_대기열에_토큰을_생성한다() {
 
             Concert concert1 = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
             Concert concert2 = ConcertFixtureFactory.createConcertWithIdAndName(2L, "아이유 콘서트");
@@ -106,9 +107,9 @@ public class WaitingQueueFacadeServiceTest {
             given(concertService.getConcertById(1L)).willReturn(concert1);
             given(waitingQueueService.getAllByConcertId(1L)).willReturn(List.of(element1, element2));
 
-            TokenResponse tokenResponse = sut.createToken(1L, uuid);
+            TokenVO tokenVO = sut.createToken(1L, uuid);
 
-            assertEquals(3, tokenResponse.getWaitingNumber());
+            assertEquals(3, tokenVO.getWaitingNumber());
             verify(waitingQueueService, times(1)).save(any(WaitingQueue.class));
         }
     }

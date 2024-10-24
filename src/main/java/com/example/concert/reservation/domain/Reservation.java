@@ -5,9 +5,11 @@ import com.example.concert.global.entity.BaseTimeEntity;
 import com.example.concert.seat.domain.Seat;
 import jakarta.persistence.*;
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.UUID;
 
+@Getter
 @Entity
 @Table(name = "reservation")
 public class Reservation extends BaseTimeEntity {

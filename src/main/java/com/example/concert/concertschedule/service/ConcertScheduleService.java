@@ -1,5 +1,8 @@
 package com.example.concert.concertschedule.service;
 
+import com.example.concert.common.CustomException;
+import com.example.concert.common.ErrorCode;
+import com.example.concert.common.Loggable;
 import com.example.concert.concertschedule.domain.ConcertSchedule;
 import com.example.concert.concertschedule.repository.ConcertScheduleRepository;
 import com.example.concert.utils.TimeProvider;
@@ -24,8 +27,8 @@ public class ConcertScheduleService {
         return concertScheduleRepository.findAllAfterNowByConcertId(concertId, now);
     }
 
-    public ConcertSchedule getConcertScheduleById(long concertScheduleId) throws Exception {
+    public ConcertSchedule getConcertScheduleById(long concertScheduleId) {
         return concertScheduleRepository.findById(concertScheduleId)
-                                        .orElseThrow(Exception::new);
+                                        .orElseThrow(() -> new CustomException(ErrorCode.CONCERT_SCHEDULE_NOT_FOUND, Loggable.ALWAYS));
     }
 }

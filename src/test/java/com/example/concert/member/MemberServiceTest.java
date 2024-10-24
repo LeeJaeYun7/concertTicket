@@ -1,10 +1,10 @@
 package com.example.concert.member;
 
+import com.example.concert.common.CustomException;
 import com.example.concert.member.domain.Member;
-import com.example.concert.member.dto.response.MemberBalanceResponse;
-import com.example.concert.member.dto.response.MemberResponse;
 import com.example.concert.member.repository.MemberRepository;
 import com.example.concert.member.service.MemberService;
+import com.example.concert.member.vo.MemberVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,9 +42,9 @@ public class MemberServiceTest {
 
             given(memberRepository.save(any(Member.class))).willReturn(member);
 
-            MemberResponse memberResponse = sut.createMember("Tom Cruise");
+            MemberVO memberVO = sut.createMember("Tom Cruise");
 
-            assertEquals(memberResponse.getUuid(), member.getUuid());
+            assertEquals(memberVO.getUuid(), member.getUuid());
             verify(memberRepository, times(1)).save(any(Member.class));
         }
     }
@@ -55,20 +55,20 @@ public class MemberServiceTest {
 
         @Test
         @DisplayName("name이 전달될 때, uuid가 조회된다")
-        void name이_전달될때_uuid가_조회된다() throws Exception {
+        void name이_전달될때_uuid가_조회된다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
 
             given(memberRepository.findByName(name)).willReturn(Optional.of(member));
 
-            MemberResponse memberResponse = sut.getMemberUuid(name);
+            MemberVO memberVO = sut.getMemberUuid(name);
 
-            assertEquals(memberResponse.getUuid(), member.getUuid());
+            assertEquals(memberVO.getUuid(), member.getUuid());
         }
 
         @Test
         @DisplayName("uuid가 전달될 때, 멤버가 조회된다")
-        void uuid가_전달될때_멤버가_조회된다() throws Exception {
+        void uuid가_전달될때_멤버가_조회된다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             UUID uuid = member.getUuid();
@@ -82,7 +82,7 @@ public class MemberServiceTest {
 
         @Test
         @DisplayName("uuid가 전달될 때, 멤버가 비관적 락을 통해 조회된다")
-        void uuid가_전달될때_멤버가_비관적_락을_통해_조회된다() throws Exception {
+        void uuid가_전달될때_멤버가_비관적_락을_통해_조회된다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             UUID uuid = member.getUuid();
@@ -101,7 +101,7 @@ public class MemberServiceTest {
 
         @Test
         @DisplayName("uuid가 전달될 때, 멤버의 잔액이 조회된다")
-        void uuid가_전달될때_멤버의_잔액이_조회된다() throws Exception {
+        void uuid가_전달될때_멤버의_잔액이_조회된다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             member.updateBalance(100);
@@ -109,13 +109,13 @@ public class MemberServiceTest {
 
             given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
 
-            MemberBalanceResponse memberBalanceResponse = sut.getMemberBalance(uuid);
-            assertEquals(memberBalanceResponse.getBalance(), 100);
+            long balance = sut.getMemberBalance(uuid);
+            assertEquals(100, balance);
         }
 
         @Test
         @DisplayName("uuid와 콘서트 가격이 전달될 때, 멤버의 잔액이 감소한다")
-        void uuid와_콘서트_가격이_전달될때_멤버의_잔액이_감소한다() throws Exception {
+        void uuid와_콘서트_가격이_전달될때_멤버의_잔액이_감소한다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             member.updateBalance(100);
@@ -129,7 +129,7 @@ public class MemberServiceTest {
 
         @Test
         @DisplayName("uuid와 콘서트 가격이 전달될 때, 멤버의 잔액보다 콘서트 가격이 크면 Exception을 반환한다")
-        void uuid와_콘서트_가격이_전달될때_멤버의_잔액보다_콘서트_가격이_크면_Exception을_반환한다() throws Exception {
+        void uuid와_콘서트_가격이_전달될때_멤버의_잔액보다_콘서트_가격이_크면_Exception을_반환한다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             member.updateBalance(50000);
@@ -137,7 +137,7 @@ public class MemberServiceTest {
 
             given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
 
-            assertThrows(Exception.class, () -> sut.decreaseBalance(uuid, 60000));
+            assertThrows(CustomException.class, () -> sut.decreaseBalance(uuid, 60000));
         }
     }
 }

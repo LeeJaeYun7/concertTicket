@@ -8,14 +8,12 @@ import java.util.UUID;
 @Getter
 public class SeatReservationRequest {
 
-    private final String token;
     private final UUID uuid;
     private final long concertScheduleId;
     private final long number;
 
     @Builder
-    public SeatReservationRequest(String token, UUID uuid, long concertScheduleId, long number){
-        this.token = token;
+    public SeatReservationRequest(UUID uuid, long concertScheduleId, long number){
         this.uuid = uuid;
         this.concertScheduleId = concertScheduleId;
         this.number = number;

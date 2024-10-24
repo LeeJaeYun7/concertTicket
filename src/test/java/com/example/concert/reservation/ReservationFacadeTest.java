@@ -8,15 +8,14 @@ import com.example.concert.concertschedule.service.ConcertScheduleService;
 import com.example.concert.member.domain.Member;
 import com.example.concert.member.service.MemberService;
 import com.example.concert.payment.service.PaymentService;
-import com.example.concert.reservation.dto.ReservationResponse;
-import com.example.concert.reservation.service.ReservationFacadeService;
+import com.example.concert.reservation.service.ReservationFacade;
 import com.example.concert.reservation.service.ReservationService;
+import com.example.concert.reservation.vo.ReservationVO;
 import com.example.concert.seat.domain.Seat;
 import com.example.concert.seat.domain.SeatStatus;
 import com.example.concert.seat.service.SeatService;
 import com.example.concert.utils.RandomStringGenerator;
 import com.example.concert.utils.TimeProvider;
-import com.example.concert.utils.TokenValidator;
 import com.example.concert.waitingQueue.domain.WaitingQueue;
 import com.example.concert.waitingQueue.domain.WaitingQueueStatus;
 import com.example.concert.waitingQueue.service.WaitingQueueService;
@@ -27,24 +26,18 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ReservationFacadeServiceTest {
+public class ReservationFacadeTest {
 
     @Mock
     private TimeProvider timeProvider;
-    @Mock
-    private TokenValidator tokenValidator;
-
     @Mock
     private MemberService memberService;
 
@@ -68,14 +61,14 @@ public class ReservationFacadeServiceTest {
 
 
     @InjectMocks
-    private ReservationFacadeService sut;
+    private ReservationFacade sut;
 
     @Nested
     @DisplayName("예약을 생성할 때")
     class 예약을_생성할때 {
         @Test
         @DisplayName("유효성 검사를 통과하고, 좌석과 대기열의 status를 업데이트한다.")
-        void 유효성_검사를_통과하고_좌석과_대기열의_status를_업데이트한다() throws Exception {
+        void 유효성_검사를_통과하고_좌석과_대기열의_status를_업데이트한다() {
 
             String token = RandomStringGenerator.generateRandomString(16);
 
@@ -93,7 +86,6 @@ public class ReservationFacadeServiceTest {
             Seat seat = Seat.of(concertSchedule, seatNumber, 50000, SeatStatus.AVAILABLE);
             seat.changeUpdatedAt(LocalDateTime.of(2024, 10, 18, 0, 0));
 
-            given(tokenValidator.validateToken(token)).willReturn(true);
             given(seatService.getSeatByConcertScheduleIdAndNumber(concertScheduleId, seatNumber)).willReturn(seat);
             given(timeProvider.now()).willReturn(LocalDateTime.of(2024, 10, 18, 0, 3));
             given(memberService.getMemberByUuid(uuid)).willReturn(member);
@@ -103,12 +95,12 @@ public class ReservationFacadeServiceTest {
             element.updateWaitingNumber();
 
             given(concertService.getConcertById(1L)).willReturn(concert);
-            ReservationResponse reservationResponse = sut.createReservation(token, uuid, concertScheduleId, seatNumber);
+            ReservationVO reservationVO = sut.createReservation(token, uuid, concertScheduleId, seatNumber);
 
-            assertEquals("Tom Cruise", reservationResponse.getName());
-            assertEquals("박효신 콘서트", reservationResponse.getConcertName());
-            assertEquals(concertSchedule.getDateTime(), reservationResponse.getDateTime());
-            assertEquals(concertSchedule.getPrice(), reservationResponse.getPrice());
+            assertEquals("Tom Cruise", reservationVO.getName());
+            assertEquals("박효신 콘서트", reservationVO.getConcertName());
+            assertEquals(concertSchedule.getDateTime(), reservationVO.getDateTime());
+            assertEquals(concertSchedule.getPrice(), reservationVO.getPrice());
         }
     }
 }

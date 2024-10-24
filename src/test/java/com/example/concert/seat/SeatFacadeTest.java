@@ -1,5 +1,6 @@
 package com.example.concert.seat;
 
+import com.example.concert.common.CustomException;
 import com.example.concert.concert.domain.Concert;
 import com.example.concert.concertschedule.domain.ConcertSchedule;
 import com.example.concert.concertschedule.service.ConcertScheduleService;
@@ -7,11 +8,9 @@ import com.example.concert.member.domain.Member;
 import com.example.concert.member.service.MemberService;
 import com.example.concert.seat.domain.Seat;
 import com.example.concert.seat.domain.SeatStatus;
-import com.example.concert.seat.service.SeatFacadeService;
+import com.example.concert.seat.service.SeatFacade;
 import com.example.concert.seat.service.SeatService;
-import com.example.concert.utils.RandomStringGenerator;
 import com.example.concert.utils.TimeProvider;
-import com.example.concert.utils.TokenValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -27,11 +26,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-public class SeatFacadeServiceTest {
+public class SeatFacadeTest {
     @Mock
     private TimeProvider timeProvider;
-    @Mock
-    private TokenValidator tokenValidator;
     @Mock
     private MemberService memberService;
 
@@ -42,7 +39,7 @@ public class SeatFacadeServiceTest {
     private SeatService seatService;
 
     @InjectMocks
-    private SeatFacadeService sut;
+    private SeatFacade sut;
 
     @Nested
     @DisplayName("좌석 예약을 할 때")
@@ -50,12 +47,10 @@ public class SeatFacadeServiceTest {
 
         @Test
         @DisplayName("모든 유효성 검사를 통과하고, 좌석 예약이 6분전에 일어났으면 좌석 예약이 가능하다")
-        void 모든_유효성_검사를_통과하고_좌석_예약이_6분전에_일어났으면_좌석_예약이_가능하다() throws Exception {
+        void 모든_유효성_검사를_통과하고_좌석_예약이_6분전에_일어났으면_좌석_예약이_가능하다() {
 
             Member member = Member.of("Tom Cruise");
             UUID uuid = member.getUuid();
-
-            String token = RandomStringGenerator.generateRandomString(16);
 
             long concertScheduleId = 1L;
             Concert concert = Concert.of("박효신 콘서트");
@@ -66,23 +61,20 @@ public class SeatFacadeServiceTest {
             Seat seat = Seat.of(concertSchedule, 1, 50000, SeatStatus.AVAILABLE);
 
             given(memberService.getMemberByUuid(uuid)).willReturn(member);
-            given(tokenValidator.validateToken(token)).willReturn(true);
             given(concertScheduleService.getConcertScheduleById(concertScheduleId)).willReturn(concertSchedule);
             given(seatService.getSeatByConcertScheduleIdAndNumberWithLock(concertScheduleId, number)).willReturn(seat);
             given(timeProvider.now()).willReturn(LocalDateTime.of(2024, 10, 18, 0, 0));
             seat.setUpdatedAt(timeProvider.now().minusMinutes(6));
 
-            sut.createSeatReservation(token, uuid, concertScheduleId, number);
+            sut.createSeatReservation(uuid, concertScheduleId, number);
         }
 
         @Test
         @DisplayName("좌석_예약이_4분전에_일어났으면_좌석_예약이_불가능하다")
-        void 좌석_예약이_4분전에_일어났으면_좌석_예약이_불가능하다() throws Exception {
+        void 좌석_예약이_4분전에_일어났으면_좌석_예약이_불가능하다() {
 
             Member member = Member.of("Tom Cruise");
             UUID uuid = member.getUuid();
-
-            String token = RandomStringGenerator.generateRandomString(16);
 
             long concertScheduleId = 1L;
             Concert concert = Concert.of("박효신 콘서트");
@@ -93,13 +85,12 @@ public class SeatFacadeServiceTest {
             Seat seat = Seat.of(concertSchedule, 1, 50000, SeatStatus.AVAILABLE);
 
             given(memberService.getMemberByUuid(uuid)).willReturn(member);
-            given(tokenValidator.validateToken(token)).willReturn(true);
             given(concertScheduleService.getConcertScheduleById(concertScheduleId)).willReturn(concertSchedule);
             given(seatService.getSeatByConcertScheduleIdAndNumberWithLock(concertScheduleId, number)).willReturn(seat);
             given(timeProvider.now()).willReturn(LocalDateTime.of(2024, 10, 18, 0, 0));
             seat.setUpdatedAt(timeProvider.now().minusMinutes(4));
 
-            assertThrows(Exception.class, () -> sut.createSeatReservation(token, uuid, concertScheduleId, number));
+            assertThrows(CustomException.class, () -> sut.createSeatReservation(uuid, concertScheduleId, number));
         }
     }
 }
