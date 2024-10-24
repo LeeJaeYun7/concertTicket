@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @Table(name = "concert")
@@ -21,6 +23,8 @@ public class Concert extends BaseTimeEntity {
     @Builder
     public Concert(String name){
         this.name = name;
+        this.setCreatedAt(LocalDateTime.now());
+        this.setUpdatedAt(LocalDateTime.now());
     }
 
     public static Concert of(String name){

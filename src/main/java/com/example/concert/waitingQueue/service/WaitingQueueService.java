@@ -46,11 +46,11 @@ public class WaitingQueueService {
     }
 
 
-    public Optional<WaitingQueue> getByUuid(UUID uuid){
+    public Optional<WaitingQueue> getByUuid(String uuid){
         return waitingQueueRepository.findByUuid(uuid);
     }
 
-    public void delete(long concertId, UUID uuid){
+    public void delete(long concertId, String uuid){
 
         // concertId와 uuid로 토큰을 검색
         WaitingQueue token = waitingQueueRepository.findByConcert_IdAndUuid(concertId, uuid).get();

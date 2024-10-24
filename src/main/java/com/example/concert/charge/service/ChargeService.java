@@ -15,8 +15,12 @@ public class ChargeService {
         this.chargeRepository = chargeRepository;
     }
 
-    public void createCharge(UUID uuid, long amount){
+    public void createCharge(String uuid, long amount){
         Charge charge = Charge.of(uuid, amount);
         chargeRepository.save(charge);
+    }
+
+    public void getChargeByUuid(String uuid){
+        chargeRepository.findChargeByUuid(uuid);
     }
 }

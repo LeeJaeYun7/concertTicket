@@ -32,7 +32,7 @@ public class SeatFacade {
     }
 
     @Transactional
-    public void createSeatReservation(UUID uuid, long concertScheduleId, long number) {
+    public void createSeatReservation(String uuid, long concertScheduleId, long number) {
         validateMember(uuid);
         validateConcertSchedule(concertScheduleId);
 
@@ -45,7 +45,7 @@ public class SeatFacade {
         seatService.changeUpdatedAt(concertScheduleId, number);
     }
 
-    private void validateMember(UUID uuid) {
+    private void validateMember(String uuid) {
         memberService.getMemberByUuid(uuid);
     }
 

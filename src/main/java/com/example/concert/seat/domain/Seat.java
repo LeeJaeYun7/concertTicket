@@ -34,6 +34,8 @@ public class Seat extends BaseTimeEntity {
         this.number = number;
         this.price = price;
         this.status = status;
+        this.setCreatedAt(LocalDateTime.now());
+        this.setUpdatedAt(LocalDateTime.now());
     }
 
     public static Seat of(ConcertSchedule concertSchedule, long number, long price, SeatStatus status){

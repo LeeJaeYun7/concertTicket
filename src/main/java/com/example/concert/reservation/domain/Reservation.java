@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -22,7 +22,7 @@ public class Reservation extends BaseTimeEntity {
     @JoinColumn(name = "concert_schedule_id")
     private ConcertSchedule concertSchedule;
 
-    private UUID uuid;
+    private String uuid;
 
     @OneToOne
     @JoinColumn(name = "seat_id")
@@ -31,14 +31,16 @@ public class Reservation extends BaseTimeEntity {
     private long price;
 
     @Builder
-    public Reservation(ConcertSchedule concertSchedule, UUID uuid, Seat seat, long price){
+    public Reservation(ConcertSchedule concertSchedule, String uuid, Seat seat, long price){
         this.concertSchedule = concertSchedule;
         this.uuid = uuid;
         this.seat = seat;
         this.price = price;
+        this.setCreatedAt(LocalDateTime.now());
+        this.setUpdatedAt(LocalDateTime.now());
     }
 
-    public static Reservation of(ConcertSchedule concertSchedule, UUID uuid, Seat seat, long price){
+    public static Reservation of(ConcertSchedule concertSchedule, String uuid, Seat seat, long price){
         return Reservation.builder()
                           .concertSchedule(concertSchedule)
                           .uuid(uuid)

@@ -73,7 +73,7 @@ public class ReservationFacadeTest {
             String token = RandomStringGenerator.generateRandomString(16);
 
             Member member = Member.of("Tom Cruise");
-            UUID uuid = member.getUuid();
+            String uuid = member.getUuid().toString();
             member.updateBalance(100000);
 
             long seatNumber = 10;

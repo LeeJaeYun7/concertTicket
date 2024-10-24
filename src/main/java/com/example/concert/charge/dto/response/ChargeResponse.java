@@ -1,10 +1,14 @@
 package com.example.concert.charge.dto.response;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class ChargeResponse {
 
-    private final long updatedBalance;
+    private long updatedBalance;
 
     @Builder
     public ChargeResponse(long updatedBalance){

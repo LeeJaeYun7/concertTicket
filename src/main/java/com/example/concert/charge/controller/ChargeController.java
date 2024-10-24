@@ -22,7 +22,7 @@ public class ChargeController {
 
     @PostMapping("/charge")
     public ResponseEntity<ChargeResponse> chargeBalance(@RequestBody ChargeRequest chargeRequest) {
-        UUID uuid = chargeRequest.getUuid();
+        String uuid = chargeRequest.getUuid();
         long amount = chargeRequest.getAmount();
 
         long updatedBalance = chargeFacade.chargeBalance(uuid, amount);

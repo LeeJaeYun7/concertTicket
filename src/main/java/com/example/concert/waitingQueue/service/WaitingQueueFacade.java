@@ -29,7 +29,7 @@ public class WaitingQueueFacade {
     }
 
     @Transactional
-    public TokenVO createToken(long concertId, UUID uuid) {
+    public TokenVO createToken(long concertId, String uuid) {
 
         checkQueueExists(concertId, uuid);
 
@@ -51,7 +51,7 @@ public class WaitingQueueFacade {
         return TokenVO.of(newToken, end+1);
     }
 
-    private void checkQueueExists(long concertId, UUID uuid) {
+    private void checkQueueExists(long concertId, String uuid) {
         Optional<WaitingQueue> tokenOpt = waitingQueueService.getByUuid(uuid);
 
         // 대기열에 uuid로 만든 토큰이 없는 경우

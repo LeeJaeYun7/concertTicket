@@ -2,18 +2,20 @@ package com.example.concert.seat.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
 @Getter
+@NoArgsConstructor
 public class SeatReservationRequest {
 
-    private final UUID uuid;
-    private final long concertScheduleId;
-    private final long number;
+    private String uuid;
+    private long concertScheduleId;
+    private long number;
 
     @Builder
-    public SeatReservationRequest(UUID uuid, long concertScheduleId, long number){
+    public SeatReservationRequest(String uuid, long concertScheduleId, long number){
         this.uuid = uuid;
         this.concertScheduleId = concertScheduleId;
         this.number = number;

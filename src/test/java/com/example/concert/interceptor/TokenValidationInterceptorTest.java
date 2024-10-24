@@ -33,7 +33,6 @@ public class TokenValidationInterceptorTest {
     private TokenValidationInterceptor tokenValidationInterceptor;
     @BeforeEach
     public void setUp(){
-
         WaitingQueue validQueue = WaitingQueueFixtureFactory.createWaitingQueueWithTokenCreated5MinutesAgo("valid-token");
         WaitingQueue invalidQueue = WaitingQueueFixtureFactory.createWaitingQueueWithTokenCreated15MinutesAgo("invalid-token");
         WaitingQueue waitingQueue = WaitingQueueFixtureFactory.createWaitingQueueWithWaitingToken("waiting-token");
@@ -70,7 +69,6 @@ public class TokenValidationInterceptorTest {
                 tokenValidationInterceptor.preHandle(request, response, new Object());
             });
         }
-
 
         @Test
         @DisplayName("현재 기준 5분전에 생성된 WAITING 토큰으로 요청을 하는 경우, 토큰 검증에 실패한다.")

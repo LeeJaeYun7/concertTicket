@@ -34,21 +34,21 @@ public class MemberService {
         return MemberVO.of(member.getUuid(), member.getName());
     }
 
-    public Member getMemberByUuid(UUID uuid) {
+    public Member getMemberByUuid(String uuid) {
         return memberRepository.findByUuid(uuid)
                                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND, Loggable.NEVER));
     }
 
-    public Member getMemberByUuidWithLock(UUID uuid) {
+    public Member getMemberByUuidWithLock(String uuid) {
         return memberRepository.findByUuidWithLock(uuid)
                                .orElseThrow(() -> new CustomException(ErrorCode.MEMBER_NOT_FOUND, Loggable.NEVER));
     }
 
-    public long getMemberBalance(UUID uuid) {
+    public long getMemberBalance(String uuid) {
         return getMemberByUuidWithLock(uuid).getBalance();
     }
 
-    public void decreaseBalance(UUID uuid, long price) {
+    public void decreaseBalance(String uuid, long price) {
         Member member = getMemberByUuidWithLock(uuid);
         member.updateBalance(member.getBalance()-price);
     }

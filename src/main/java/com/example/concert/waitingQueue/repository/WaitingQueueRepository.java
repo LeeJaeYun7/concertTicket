@@ -18,10 +18,10 @@ public interface WaitingQueueRepository extends JpaRepository<WaitingQueue, Long
     @Query("SELECT w FROM WaitingQueue w WHERE w.concert.id = :concertId AND w.waitingNumber > 0")
     List<WaitingQueue> findAllByConcertIdWithLock(@Param("concertId") long concertId);
 
-    Optional<WaitingQueue> findByConcert_IdAndUuid(long concertId, UUID uuid);
-    Optional<WaitingQueue> findByUuid(UUID uuid);
+    Optional<WaitingQueue> findByConcert_IdAndUuid(long concertId, String uuid);
+    Optional<WaitingQueue> findByUuid(String uuid);
 
-    void deleteByConcert_IdAndUuid(long concertId, UUID uuid);
+    void deleteByConcert_IdAndUuid(long concertId, String uuid);
 
     Optional<WaitingQueue> findByToken(String token);
 

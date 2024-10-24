@@ -11,10 +11,10 @@ import java.util.UUID;
 public class TokenRequest {
 
     private long concertId;
-    private UUID uuid;
+    private String uuid;
 
     @Builder
-    public TokenRequest(long concertId, UUID uuid){
+    public TokenRequest(long concertId, String uuid){
         this.concertId = concertId;
         this.uuid = uuid;
     }

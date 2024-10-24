@@ -42,7 +42,7 @@ public class WaitingIntegrationTest {
             Concert concert = Concert.of("박효신 콘서트");
             Concert savedConcert = concertRepository.save(concert);
 
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
             WaitingQueue foundToken = WaitingQueue.of(savedConcert, uuid, token, 1);
             waitingQueueRepository.save(foundToken);
@@ -61,7 +61,7 @@ public class WaitingIntegrationTest {
             Concert concert = Concert.of("박효신 콘서트");
             Concert savedConcert = concertRepository.save(concert);
 
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue foundToken1  = WaitingQueue.of(savedConcert, uuid, token, 1);
@@ -90,7 +90,7 @@ public class WaitingIntegrationTest {
             Concert concert = Concert.of("박효신 콘서트");
             Concert savedConcert = concertRepository.save(concert);
 
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue activeToken  = WaitingQueue.of(savedConcert, uuid, token, 0);
@@ -110,7 +110,7 @@ public class WaitingIntegrationTest {
             Concert concert = Concert.of("박효신 콘서트");
             Concert savedConcert = concertRepository.save(concert);
 
-            UUID uuid1 = UUID.randomUUID();
+            String uuid1 = UUID.randomUUID().toString();
             String token1 = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue activeToken  = WaitingQueue.of(savedConcert, uuid1, token1, 0);
@@ -119,7 +119,7 @@ public class WaitingIntegrationTest {
             activeToken.activateToken(fifteenMinutesAgo);
             waitingQueueRepository.save(activeToken);
 
-            UUID uuid2 = UUID.randomUUID();
+            String uuid2 = UUID.randomUUID().toString();
             String token2 = RandomStringGenerator.generateRandomString(16);
             WaitingQueue firstToken  = WaitingQueue.of(savedConcert, uuid2, token2, 1);
             waitingQueueRepository.save(firstToken);
@@ -142,7 +142,7 @@ public class WaitingIntegrationTest {
             Concert concert = Concert.of("박효신 콘서트");
             Concert savedConcert = concertRepository.save(concert);
 
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue activeToken = WaitingQueue.of(savedConcert, uuid, token, 0);

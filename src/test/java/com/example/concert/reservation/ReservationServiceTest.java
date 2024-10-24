@@ -42,7 +42,7 @@ public class ReservationServiceTest {
             LocalDateTime dateTime = LocalDateTime.of(2024, 10, 16, 22, 30);
             ConcertSchedule concertSchedule = ConcertSchedule.of(concert, dateTime, 50000);
 
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             Seat seat = Seat.of(concertSchedule, 1, 50000, SeatStatus.AVAILABLE);
 
             Reservation reservation = Reservation.of(concertSchedule, uuid, seat, 50000);

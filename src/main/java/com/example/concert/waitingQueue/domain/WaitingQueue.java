@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Getter
 @Entity
@@ -24,7 +23,7 @@ public class WaitingQueue extends BaseTimeEntity {
     @JoinColumn(name = "concert_id")
     private Concert concert;
 
-    private UUID uuid;
+    private String uuid;
 
     private String token;
 
@@ -35,19 +34,18 @@ public class WaitingQueue extends BaseTimeEntity {
     private WaitingQueueStatus status;
 
     @Builder
-    public WaitingQueue(Concert concert, UUID uuid, String token, long waitingNumber, WaitingQueueStatus status, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public WaitingQueue(Concert concert, String uuid, String token, long waitingNumber, WaitingQueueStatus status){
         this.concert = concert;
         this.uuid = uuid;
         this.token = token;
         this.waitingNumber = waitingNumber;
         this.status = status;
-        this.setCreatedAt(createdAt);
-        this.setUpdatedAt(updatedAt);
+        this.setCreatedAt(LocalDateTime.now());
+        this.setUpdatedAt(LocalDateTime.now());
     }
 
-    public static WaitingQueue of(Concert concert, UUID uuid, String token, long waitingNumber){
+    public static WaitingQueue of(Concert concert, String uuid, String token, long waitingNumber){
 
-        LocalDateTime now = LocalDateTime.now();
         WaitingQueueStatus status = WaitingQueueStatus.WAITING;
 
         return WaitingQueue.builder()
@@ -56,8 +54,6 @@ public class WaitingQueue extends BaseTimeEntity {
                            .token(token)
                            .waitingNumber(waitingNumber)
                            .status(status)
-                           .createdAt(now)
-                           .updatedAt(now)
                            .build();
     }
 

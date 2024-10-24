@@ -21,21 +21,22 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private UUID uuid;
+    @Column(unique = true, nullable = false)
+    private String uuid;
 
     private String name;
 
     private long balance;
 
     @Builder
-    public Member(UUID uuid, String name, long balance){
+    public Member(String uuid, String name, long balance){
         this.uuid = uuid;
         this.name = name;
         this.balance = balance;
     }
 
     public static Member of(String name){
-        UUID uuid = UUID.randomUUID();
+        String uuid = UUID.randomUUID().toString();
 
         return Member.builder()
                      .uuid(uuid)

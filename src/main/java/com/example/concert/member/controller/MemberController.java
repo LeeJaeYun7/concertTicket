@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @GetMapping("/member/balance")
-    public ResponseEntity<MemberBalanceResponse> getMemberBalance(@RequestParam(value="uuid") UUID uuid) {
+    public ResponseEntity<MemberBalanceResponse> getMemberBalance(@RequestParam(value="uuid") String uuid) {
         long balance = memberService.getMemberBalance(uuid);
         MemberBalanceResponse memberBalanceResponse = MemberBalanceResponse.of(balance);
 

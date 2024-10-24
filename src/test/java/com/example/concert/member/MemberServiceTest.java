@@ -71,7 +71,7 @@ public class MemberServiceTest {
         void uuid가_전달될때_멤버가_조회된다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
-            UUID uuid = member.getUuid();
+            String uuid = member.getUuid();
 
             given(memberRepository.findByUuid(uuid)).willReturn(Optional.of(member));
 
@@ -85,7 +85,7 @@ public class MemberServiceTest {
         void uuid가_전달될때_멤버가_비관적_락을_통해_조회된다() {
             String name = "Tom Cruise";
             Member member = Member.of(name);
-            UUID uuid = member.getUuid();
+            String uuid = member.getUuid();
 
             given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
 
@@ -105,7 +105,7 @@ public class MemberServiceTest {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             member.updateBalance(100);
-            UUID uuid = member.getUuid();
+            String uuid = member.getUuid();
 
             given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
 
@@ -119,7 +119,7 @@ public class MemberServiceTest {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             member.updateBalance(100);
-            UUID uuid = member.getUuid();
+            String uuid = member.getUuid();
 
             given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
 
@@ -133,7 +133,7 @@ public class MemberServiceTest {
             String name = "Tom Cruise";
             Member member = Member.of(name);
             member.updateBalance(50000);
-            UUID uuid = member.getUuid();
+            String uuid = member.getUuid();
 
             given(memberRepository.findByUuidWithLock(uuid)).willReturn(Optional.of(member));
 

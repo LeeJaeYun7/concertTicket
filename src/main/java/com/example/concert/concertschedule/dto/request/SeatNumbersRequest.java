@@ -1,12 +1,14 @@
 package com.example.concert.concertschedule.dto.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class SeatNumbersRequest {
 
-    private final String token;
-    private final long concertScheduleId;
+    private String token;
+    private long concertScheduleId;
 
     public SeatNumbersRequest(String token, long concertScheduleId){
         this.token = token;

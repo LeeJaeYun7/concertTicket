@@ -49,14 +49,14 @@ public class WaitingQueueFacadeTest {
         @Test
         @DisplayName("어떤 대기열에도 토큰이 없다면, 토큰을 생성한다")
         void 어떤_대기열에도_토큰이_없다면_토큰을_생성한다() {
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             Concert concert1 = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
 
-            UUID uuid1 = UUID.randomUUID();
+            String uuid1 = UUID.randomUUID().toString();
             String token1 = RandomStringGenerator.generateRandomString(16);
             WaitingQueue element1 = WaitingQueue.of(concert1, uuid1, token1, 1);
 
-            UUID uuid2 = UUID.randomUUID();
+            String uuid2 = UUID.randomUUID().toString();
             String token2 = RandomStringGenerator.generateRandomString(16);
             WaitingQueue element2 = WaitingQueue.of(concert1, uuid2, token2, 2);
 
@@ -75,7 +75,7 @@ public class WaitingQueueFacadeTest {
         void 같은_대기열에_토큰이_있다면_토큰을_생성하지_않는다() {
 
             Concert concert = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue element = WaitingQueue.of(concert, uuid, token, 1);
@@ -90,16 +90,16 @@ public class WaitingQueueFacadeTest {
 
             Concert concert1 = ConcertFixtureFactory.createConcertWithIdAndName(1L, "박효신 콘서트");
             Concert concert2 = ConcertFixtureFactory.createConcertWithIdAndName(2L, "아이유 콘서트");
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue element = WaitingQueue.of(concert2, uuid, token, 10);
 
-            UUID uuid1 = UUID.randomUUID();
+            String uuid1 = UUID.randomUUID().toString();
             String token1 = RandomStringGenerator.generateRandomString(16);
             WaitingQueue element1 = WaitingQueue.of(concert1, uuid1, token1, 1);
 
-            UUID uuid2 = UUID.randomUUID();
+            String uuid2 = UUID.randomUUID().toString();
             String token2 = RandomStringGenerator.generateRandomString(16);
             WaitingQueue element2 = WaitingQueue.of(concert1, uuid2, token2, 2);
 

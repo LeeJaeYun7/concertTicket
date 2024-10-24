@@ -22,7 +22,7 @@ public class WaitingQueueScheduler {
         this.waitingQueueService = waitingQueueService;
     }
 
-    @Scheduled(fixedRate = 3000)
+    // @Scheduled(fixedRate = 3000)
     @Transactional
     public void processWaitingQueue() {
 

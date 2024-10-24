@@ -25,7 +25,7 @@ public class ReservationController {
     @PostMapping("/reservation")
     public ResponseEntity<ReservationResponse> createReservation(@RequestBody ReservationRequest reservationRequest, HttpServletRequest request) {
         String token = request.getHeader("Authorization");
-        UUID uuid = reservationRequest.getUuid();
+        String uuid = reservationRequest.getUuid();
         long concertScheduleId = reservationRequest.getConcertScheduleId();
         long seatNumber = reservationRequest.getSeatNumber();
 

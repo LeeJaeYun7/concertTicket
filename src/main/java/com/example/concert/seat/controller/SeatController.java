@@ -21,7 +21,7 @@ public class SeatController {
 
     @PostMapping("/seat/reservation")
     public ResponseEntity<Void> createSeatReservation(@RequestBody SeatReservationRequest seatReservationRequest) {
-        UUID uuid = seatReservationRequest.getUuid();
+        String uuid = seatReservationRequest.getUuid();
         long concertScheduleId = seatReservationRequest.getConcertScheduleId();
         long number = seatReservationRequest.getNumber();
 

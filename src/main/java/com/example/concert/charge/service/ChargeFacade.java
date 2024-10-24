@@ -1,8 +1,10 @@
 package com.example.concert.charge.service;
 
+import com.example.concert.common.CustomException;
 import com.example.concert.member.domain.Member;
 import com.example.concert.member.service.MemberService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -17,19 +19,23 @@ public class ChargeFacade {
         this.chargeService = chargeService;
     }
 
-    public long chargeBalance(UUID uuid, long amount) {
+    @Transactional
+    public long chargeBalance(String uuid, long amount) {
+
         validateMember(uuid);
+        chargeService.getChargeByUuid(uuid);
 
         Member member = memberService.getMemberByUuidWithLock(uuid);
         long balance = member.getBalance();
         long updatedBalance = balance + amount;
-        member.updateBalance(updatedBalance);
 
+        member.updateBalance(updatedBalance);
         chargeService.createCharge(uuid, amount);
 
         return updatedBalance;
     }
-    public void validateMember(UUID uuid) {
+
+    public void validateMember(String uuid) {
         memberService.getMemberByUuid(uuid);
     }
 }

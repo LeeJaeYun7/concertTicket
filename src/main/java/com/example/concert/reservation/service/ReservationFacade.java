@@ -49,7 +49,8 @@ public class ReservationFacade {
     }
 
     @Transactional
-    public ReservationVO createReservation(String token, UUID uuid, long concertScheduleId, long seatNumber) {
+    public ReservationVO createReservation(String token, String uuid, long concertScheduleId, long seatNumber) {
+
         validateSeatReservation(concertScheduleId, seatNumber);
         checkBalanceOverPrice(uuid, concertScheduleId);
 
@@ -83,7 +84,7 @@ public class ReservationFacade {
          }
     }
 
-    private void checkBalanceOverPrice(UUID uuid, long concertScheduleId) {
+    private void checkBalanceOverPrice(String uuid, long concertScheduleId) {
         long balance = getMember(uuid).getBalance();
         long price = getConcertSchedule(concertScheduleId).getPrice();
 
@@ -91,7 +92,7 @@ public class ReservationFacade {
             throw new CustomException(ErrorCode.INSUFFICIENT_BALANCE, Loggable.NEVER);
         }
     }
-    private Member getMember(UUID uuid) {
+    private Member getMember(String uuid) {
         return memberService.getMemberByUuid(uuid);
     }
 

@@ -16,7 +16,7 @@ public class PaymentService {
         this.paymentRepository = paymentRepository;
     }
 
-    public void createPayment(ConcertSchedule concertSchedule, UUID uuid, long amount){
+    public void createPayment(ConcertSchedule concertSchedule, String uuid, long amount){
         Payment payment = Payment.of(concertSchedule, uuid, amount);
         paymentRepository.save(payment);
     }

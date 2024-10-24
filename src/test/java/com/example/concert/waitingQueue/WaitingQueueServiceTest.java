@@ -45,7 +45,7 @@ public class WaitingQueueServiceTest {
         @DisplayName("concertId와 UUID가 전달될 때, 토큰이 삭제된다")
         void concertId와_UUID가_전달될때_토큰이_삭제된다() {
             Concert concert = Concert.of("박효신 콘서트");
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
             WaitingQueue foundToken = WaitingQueue.of(concert, uuid, token, 1);
 
@@ -65,7 +65,7 @@ public class WaitingQueueServiceTest {
         @DisplayName("concertId와 waitingNumber가 전달될 때, 전달된 waitingNumber보다 큰 waitingNumber는 값이 1 감소한다")
         void concertId와_waitingNumber가_전달될때_전달된_waitingNumber보다_큰_waitingNumber는_값이_1_감소한다() {
             Concert concert = Concert.of("박효신 콘서트");
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue foundToken1  = WaitingQueue.of(concert, uuid, token, 1);
@@ -90,7 +90,7 @@ public class WaitingQueueServiceTest {
         @DisplayName("활성화된 토큰이 10분이 지나지 않았다면 유효하다.")
         void 활성화된_토큰이_10분이_지나지_않았다면_유효하다() {
             Concert concert = Concert.of("박효신 콘서트");
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue activeToken  = WaitingQueue.of(concert, uuid, token, 0);
@@ -110,7 +110,7 @@ public class WaitingQueueServiceTest {
         @DisplayName("활성화된 토큰이 10분이 지났다면 무효화하고, 새 토큰을 대기열에서 꺼낸다.")
         void 활성화된_토큰이_10분이_지났다면_무효화하고_새_토큰을_대기열에서_꺼낸다() {
             Concert concert = Concert.of("박효신 콘서트");
-            UUID uuid1 = UUID.randomUUID();
+            String uuid1 = UUID.randomUUID().toString();
             String token1 = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue activeToken  = WaitingQueue.of(concert, uuid1, token1, 0);
@@ -121,7 +121,7 @@ public class WaitingQueueServiceTest {
 
             given(waitingQueueRepository.findByConcertIdAndWaitingNumber(1L, 0)).willReturn(Optional.of(activeToken));
 
-            UUID uuid2 = UUID.randomUUID();
+            String uuid2 = UUID.randomUUID().toString();
             String token2 = RandomStringGenerator.generateRandomString(16);
             WaitingQueue firstToken  = WaitingQueue.of(concert, uuid2, token2, 0);
             given(waitingQueueRepository.findByConcertIdAndWaitingNumber(1L, 1)).willReturn(Optional.of(firstToken));
@@ -142,7 +142,7 @@ public class WaitingQueueServiceTest {
         @DisplayName("토큰의 상태가 DONE으로 업데이트된다.")
         void 토큰의_상태가_DONE으로_업데이트된다() {
             Concert concert = Concert.of("박효신 콘서트");
-            UUID uuid = UUID.randomUUID();
+            String uuid = UUID.randomUUID().toString();
             String token = RandomStringGenerator.generateRandomString(16);
 
             WaitingQueue activeToken = WaitingQueue.of(concert, uuid, token, 0);

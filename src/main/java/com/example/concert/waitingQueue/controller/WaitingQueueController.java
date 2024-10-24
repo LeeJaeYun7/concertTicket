@@ -27,7 +27,7 @@ public class WaitingQueueController {
     @PostMapping("/waitingQueue/token")
     public ResponseEntity<TokenResponse> createToken(@RequestBody TokenRequest tokenRequest) {
         long concertId = tokenRequest.getConcertId();
-        UUID uuid = tokenRequest.getUuid();
+        String uuid = tokenRequest.getUuid();
 
         TokenVO tokenVO = waitingQueueFacade.createToken(concertId, uuid);
         TokenResponse tokenResponse = TokenResponse.of(tokenVO.getNewToken(), tokenVO.getWaitingNumber());

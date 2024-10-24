@@ -20,7 +20,7 @@ public interface SeatRepository extends JpaRepository<Seat, Long> {
 
     Optional<Seat> findByConcertScheduleIdAndNumber(long concertScheduleId, long number);
 
-    @Lock(LockModeType.PESSIMISTIC_READ)
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT s FROM Seat s WHERE s.concertSchedule.id = :concertScheduleId AND s.number = :number")
     Optional<Seat> findByConcertScheduleIdAndNumberWithLock(@Param("concertScheduleId") long concertScheduleId, @Param("number") long number);
 }
