@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import concert.application.reservation.application.event.PaymentConfirmedEvent;
 import concert.application.reservation.application.event.PaymentRequestEvent;
-import concert.application.reservation.infrastructure.kafka.KafkaMessageProducer;
+import concert.application.reservation.application.kafka.KafkaMessageProducer;
 import concert.commons.common.CustomException;
 import concert.commons.common.ErrorCode;
 import concert.commons.common.Loggable;

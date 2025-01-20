@@ -3,7 +3,7 @@ package concert.application.reservation.application.scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import concert.application.reservation.application.event.PaymentRequestEvent;
-import concert.application.reservation.infrastructure.kafka.KafkaMessageProducer;
+import concert.application.reservation.application.kafka.KafkaMessageProducer;
 import concert.domain.reservation.domain.Outbox;
 import concert.domain.reservation.domain.OutboxRepository;
 import lombok.RequiredArgsConstructor;

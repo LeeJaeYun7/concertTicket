@@ -1,7 +1,7 @@
 package concert.domain.waitingQueue.application;
 
-import concert.domain.redis.WaitingQueueDao;
 import concert.domain.waitingQueue.application.dto.WaitingRankResponse;
+import concert.domain.waitingQueue.domain.WaitingQueueDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

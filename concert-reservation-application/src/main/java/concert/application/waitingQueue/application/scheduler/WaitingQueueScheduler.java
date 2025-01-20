@@ -2,7 +2,7 @@ package concert.application.waitingQueue.application.scheduler;
 
 import concert.commons.common.CustomException;
 import concert.domain.concert.application.ConcertService;
-import concert.domain.redis.WaitingQueueDao;
+import concert.domain.waitingQueue.domain.WaitingQueueDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

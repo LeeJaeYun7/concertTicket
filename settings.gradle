@@ -3,3 +3,5 @@ rootProject.name = 'concert'
 include 'commons'
 include 'concert-reservation-application'
 include 'concert-reservation-domain'
+include 'concert-reservation-infrastructure'
+

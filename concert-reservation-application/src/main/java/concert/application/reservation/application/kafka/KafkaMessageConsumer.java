@@ -1,4 +1,4 @@
-package concert.application.reservation.infrastructure.kafka;
+package concert.application.reservation.application.kafka;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
