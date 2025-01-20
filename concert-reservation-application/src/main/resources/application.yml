@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # 필요에 따라 create, update, validate 등으로 설정
+      ddl-auto: none # 필요에 따라 create, update, validate 등으로 설정
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect # MySQL 전용 Dialect 설정
