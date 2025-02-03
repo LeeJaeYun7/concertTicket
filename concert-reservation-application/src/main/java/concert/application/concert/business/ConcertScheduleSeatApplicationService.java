@@ -1,9 +1,5 @@
 package concert.application.concert.business;
 
-import concert.domain.concert.entities.ConcertScheduleSeatEntity;
-import concert.domain.concert.entities.enums.ConcertScheduleSeatStatus;
-import concert.domain.concert.exceptions.ConcertException;
-import concert.domain.concert.exceptions.ConcertExceptionType;
 import concert.domain.concert.services.ConcertScheduleService;
 import concert.domain.concert.services.ConcertService;
 import concert.domain.concerthall.services.ConcertHallSeatService;
@@ -15,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -42,38 +36,10 @@ public class ConcertScheduleSeatApplicationService {
   }
 
   @Transactional
-  public void createConcertScheduleSeatReservationWithDistributedLock(String uuid, long concertScheduleId, long concertHallSeatNumber) {
-    validateMember(uuid);
-    validateConcertSchedule(concertScheduleId);
-
-    boolean isReservable = validateSeatWithDistributedLock(concertScheduleId, concertHallSeatNumber);
-
-    if (!isReservable) {
-      throw new ConcertException(ConcertExceptionType.NOT_VALID_SEAT);
+  public void reserveConcertScheduleSeats(List<Long> concertScheduleSeatIds) {
+    for(long concertScheduleSeatId: concertScheduleSeatIds){
+      concertScheduleSeatService.reserveConcertScheduleSeat(concertScheduleSeatId);
+      concertScheduleSeatService.changeStatusAndUpdatedAt(concertScheduleSeatId);
     }
-
-    concertScheduleSeatService.changeUpdatedAtWithDistributedLock(concertScheduleId, concertHallSeatNumber);
-  }
-
-
-  private void validateMember(String uuid) {
-    memberService.getMemberByUuid(uuid);
-  }
-
-  private void validateConcertSchedule(long concertScheduleId) {
-    concertScheduleService.getConcertScheduleById(concertScheduleId);
-  }
-
-  private boolean validateSeatWithDistributedLock(long concertScheduleId, long concertHallSeatNumber) {
-    String lockName = "SEAT_RESERVATION:" + concertScheduleId + ":" + concertHallSeatNumber;
-
-    ConcertScheduleSeatEntity concertScheduleSeat = concertScheduleSeatService.getConcertScheduleSeatWithDistributedLock(concertScheduleId, concertHallSeatNumber);
-    return concertScheduleSeat.getStatus().equals(ConcertScheduleSeatStatus.AVAILABLE) && isFiveMinutesPassed(concertScheduleSeat.getUpdatedAt());
-  }
-
-  private boolean isFiveMinutesPassed(LocalDateTime updatedAt) {
-    LocalDateTime now = timeProvider.now();
-    Duration duration = Duration.between(updatedAt, now);
-    return duration.toMinutes() >= 5;
   }
 }

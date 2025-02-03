@@ -33,9 +33,9 @@ public class ConcertScheduleEntity extends BaseTimeEntity {
 
   public static ConcertScheduleEntity of(long concertId, LocalDateTime dateTime) {
     return ConcertScheduleEntity.builder()
-                          .concertId(concertId)
-                          .dateTime(dateTime)
-                          .build();
+                                .concertId(concertId)
+                                .dateTime(dateTime)
+                                .build();
   }
 
   public void setConcertId(long concertId){

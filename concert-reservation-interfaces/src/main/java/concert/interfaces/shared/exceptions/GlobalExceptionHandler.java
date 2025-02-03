@@ -3,7 +3,7 @@ package concert.interfaces.shared.exceptions;
 import concert.domain.concert.exceptions.ConcertException;
 import concert.domain.concerthall.exceptions.ConcertHallException;
 import concert.domain.member.exceptions.MemberException;
-import concert.domain.reservation.exceptions.ReservationException;
+import concert.domain.order.exceptions.OrderException;
 import concert.domain.shared.exceptions.CustomException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,14 +56,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(ex.getMemberExceptionType().getHttpStatus()).body(errorResponse);
     }
 
-    @ExceptionHandler(ReservationException.class)
-    public ResponseEntity<ErrorResponse> handleReservationException(ReservationException ex) {
+    @ExceptionHandler(OrderException.class)
+    public ResponseEntity<ErrorResponse> handleOrderException(OrderException ex) {
 
         ErrorResponse errorResponse = new ErrorResponse(
-                ex.getReservationExceptionType().getHttpStatus(),
-                ex.getReservationExceptionType().getMessage()
+                ex.getOrderExceptionType().getHttpStatus(),
+                ex.getOrderExceptionType().getMessage()
         );
 
-        return ResponseEntity.status(ex.getReservationExceptionType().getHttpStatus()).body(errorResponse);
+        return ResponseEntity.status(ex.getOrderExceptionType().getHttpStatus()).body(errorResponse);
     }
 }

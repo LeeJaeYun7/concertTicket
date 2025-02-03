@@ -26,26 +26,26 @@ public class ConcertScheduleSeatEntity extends BaseTimeEntity {
   private long concertScheduleId;
 
   @Column(name = "seat_grade_id")
-  private long seatGradeId;
+  private long concertSeatGradeId;
 
   @Enumerated(EnumType.STRING)
   private ConcertScheduleSeatStatus status;
 
   @Builder
-  public ConcertScheduleSeatEntity(long concertHallSeatId, long concertScheduleId, long seatGradeId, ConcertScheduleSeatStatus status) {
+  public ConcertScheduleSeatEntity(long concertHallSeatId, long concertScheduleId, long concertSeatGradeId, ConcertScheduleSeatStatus status) {
     this.concertHallSeatId = concertHallSeatId;
     this.concertScheduleId = concertScheduleId;
-    this.seatGradeId = seatGradeId;
+    this.concertSeatGradeId = concertSeatGradeId;
     this.status = status;
     this.setCreatedAt(LocalDateTime.now());
     this.setUpdatedAt(LocalDateTime.now());
   }
 
-  public static ConcertScheduleSeatEntity of(long concertHallSeatId, long concertScheduleId, long seatGradeId, ConcertScheduleSeatStatus status) {
+  public static ConcertScheduleSeatEntity of(long concertHallSeatId, long concertScheduleId, long concertSeatGradeId, ConcertScheduleSeatStatus status) {
     return ConcertScheduleSeatEntity.builder()
                                     .concertHallSeatId(concertHallSeatId)
                                     .concertScheduleId(concertScheduleId)
-                                    .seatGradeId(seatGradeId)
+                                    .concertSeatGradeId(concertSeatGradeId)
                                     .status(status)
                                     .build();
   }
@@ -55,6 +55,6 @@ public class ConcertScheduleSeatEntity extends BaseTimeEntity {
   }
 
   public void changeUpdatedAt(LocalDateTime dateTime) {
-    this.setUpdatedAt(dateTime);
+      this.setUpdatedAt(dateTime);
   }
 }

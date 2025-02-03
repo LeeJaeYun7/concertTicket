@@ -17,7 +17,7 @@ import concert.domain.concerthall.entities.ConcertHallSeatEntity;
 import concert.domain.concerthall.entities.dao.ConcertHallSeatEntityDAO;
 import concert.domain.member.entities.MemberEntity;
 import concert.domain.member.entities.dao.MemberRepository;
-import concert.domain.reservation.entities.dao.ReservationRepository;
+import concert.domain.order.entities.dao.ReservationEntityDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class TestDataFactory {
   private ConcertScheduleSeatEntityDAO concertScheduleSeatEntityDAO;
 
   @Autowired
-  private ReservationRepository reservationRepository;
+  private ReservationEntityDAO reservationEntityDAO;
 
 
   public MemberEntity createMember() {

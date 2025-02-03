@@ -14,7 +14,7 @@ public class ConcertSeatGradeService {
     private final ConcertSeatGradeEntityDAO concertSeatGradeEntityDAO;
 
     public long getConcertSeatGradePrice(long seatGradeId){
-        ConcertSeatGradeEntity seatGrade = concertSeatGradeEntityDAO.findById(seatGradeId).orElseThrow(() -> new ConcertException(ConcertExceptionType.SEAT_GRADE_NOT_FOUND));
+        ConcertSeatGradeEntity seatGrade = concertSeatGradeEntityDAO.findById(seatGradeId).orElseThrow(() -> new ConcertException(ConcertExceptionType.CONCERT_SEAT_GRADE_NOT_FOUND));
         return seatGrade.getPrice();
     }
 }

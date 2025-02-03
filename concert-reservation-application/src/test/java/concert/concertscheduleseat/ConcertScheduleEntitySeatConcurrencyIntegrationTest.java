@@ -126,7 +126,7 @@ public class ConcertScheduleEntitySeatConcurrencyIntegrationTest {
 
         executorService.submit(() -> {
           try {
-            concertScheduleSeatApplicationService.createConcertScheduleSeatReservationWithDistributedLock(savedMembers.get(finalI).getUuid(), savedConcertSchedule.getId(), savedSeat.getNumber());
+            concertScheduleSeatApplicationService.reserveConcertScheduleSeats(List.of(1L));
             successCount.incrementAndGet();
           } finally {
             latch.countDown();

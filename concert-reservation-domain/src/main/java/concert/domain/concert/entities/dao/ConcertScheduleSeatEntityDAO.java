@@ -15,9 +15,10 @@ public interface ConcertScheduleSeatEntityDAO extends JpaRepository<ConcertSched
   @Query("SELECT s FROM ConcertScheduleSeatEntity s WHERE s.concertScheduleId = :concertScheduleId AND s.status = :status AND s.updatedAt <= :threshold")
   List<ConcertScheduleSeatEntity> findAllAvailableConcertScheduleSeatEntities(@Param("concertScheduleId") long concertScheduleId, @Param("status") ConcertScheduleSeatStatus status, @Param("threshold") LocalDateTime threshold);
 
-  @Query("SELECT s FROM ConcertScheduleSeatEntity s WHERE s.concertScheduleId = :concertScheduleId AND s.concertHallSeatId = :concertHallSeatId")
-  Optional<ConcertScheduleSeatEntity> findConcertScheduleSeatEntity(@Param("concertScheduleId") long concertScheduleId, @Param("concertHallSeatId") long concertHallSeatId);
+  @Query("SELECT s FROM ConcertScheduleSeatEntity s WHERE s.id = :concertScheduleSeatId")
+  Optional<ConcertScheduleSeatEntity> findConcertScheduleSeatEntity(@Param("concertScheduleSeatId") long concertScheduleSeatId);
 
-  @Query("SELECT s FROM ConcertScheduleSeatEntity s WHERE s.concertScheduleId = :concertScheduleId AND s.concertHallSeatId = :concertHallSeatId")
-  Optional<ConcertScheduleSeatEntity> findConcertScheduleSeatEntityWithDistributedLock(@Param("concertScheduleId") long concertScheduleId, @Param("concertHallSeatId") long concertHallSeatId);
+
+  @Query("SELECT s FROM ConcertScheduleSeatEntity s WHERE s.status = :status AND s.updatedAt <= :threshold")
+  List<ConcertScheduleSeatEntity> updateExpiredConcertScheduleSeats( @Param("status") ConcertScheduleSeatStatus status, @Param("threshold") LocalDateTime threshold);
 }

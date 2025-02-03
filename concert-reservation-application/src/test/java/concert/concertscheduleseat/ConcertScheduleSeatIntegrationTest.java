@@ -117,7 +117,7 @@ public class ConcertScheduleSeatIntegrationTest {
       ConcertHallSeatEntity seat = ConcertHallSeatEntity.of(savedConcertHallEntity.getId(), 1);
       concertHallSeatEntityDAO.save(seat);
 
-      sut.changeUpdatedAtWithDistributedLock(savedConcertSchedule.getId(), 1);
+      sut.changeStatusAndUpdatedAt(1L);
 
       assertEquals(seat.getUpdatedAt(), LocalDateTime.now());
     }
@@ -149,7 +149,7 @@ public class ConcertScheduleSeatIntegrationTest {
       ConcertScheduleSeatEntity allConcertScheduleSeat = ConcertScheduleSeatEntity.of(seat.getId(), concertSchedule.getId(), allSeatGrade.getId(), ConcertScheduleSeatStatus.AVAILABLE);
       concertScheduleSeatEntityDAO.save(allConcertScheduleSeat);
 
-      sut.updateSeatStatus(savedConcertSchedule.getId(), 11, ConcertScheduleSeatStatus.RESERVED);
+      sut.updateConcertScheduleSeatStatus(11, ConcertScheduleSeatStatus.RESERVED);
 
       assertEquals(allConcertScheduleSeat.getStatus(), ConcertScheduleSeatStatus.RESERVED);
     }

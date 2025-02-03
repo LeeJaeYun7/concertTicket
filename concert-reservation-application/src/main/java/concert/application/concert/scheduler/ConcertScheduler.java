@@ -3,7 +3,7 @@ package concert.application.concert.scheduler;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concert.domain.concert.cache.ConcertCache;
 import concert.domain.concert.entities.ConcertEntity;
-import concert.domain.reservation.entities.dao.ReservationRepository;
+import concert.domain.order.entities.dao.ReservationEntityDAO;
 import concert.domain.shared.utils.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConcertScheduler {
 
-  private final ReservationRepository reservationRepository;
+  private final ReservationEntityDAO reservationEntityDAO;
   private final TimeProvider timeProvider;
   private final ConcertCache concertCache;
 
@@ -28,7 +28,7 @@ public class ConcertScheduler {
     LocalDateTime now = timeProvider.now();
     LocalDateTime threeDaysAgo = now.minus(Duration.ofHours(72));
 
-    List<ConcertEntity> top30Concerts = reservationRepository.findTop30Concerts(threeDaysAgo);
+    List<ConcertEntity> top30Concerts = reservationEntityDAO.findTop30Concerts(threeDaysAgo);
     concertCache.saveTop30Concerts(top30Concerts);
   }
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "seat_grade")
+@Table(name = "concert_seat_grade")
 @NoArgsConstructor
 public class ConcertSeatGradeEntity extends BaseTimeEntity {
 

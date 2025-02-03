@@ -25,16 +25,14 @@ public class DistributedLockAop {
     private final RedissonClient redissonClient;
     private final AopForTransaction aopForTransaction;
 
-    @Around("@annotation(concert.commons.lock.DistributedLock)")
+    @Around("@annotation(concert.infrastructure.distributedlock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
-
-        Object[] args = joinPoint.getArgs();
-        String key = REDISSON_LOCK_PREFIX + (String) args[0];
-
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-
         DistributedLock distributedLock = method.getAnnotation(DistributedLock.class);
+
+        String key = REDISSON_LOCK_PREFIX + CustomSpringELParser.getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), distributedLock.key());
+        System.out.println("key는?" + key);
 
         RLock rLock = redissonClient.getLock(key);
 

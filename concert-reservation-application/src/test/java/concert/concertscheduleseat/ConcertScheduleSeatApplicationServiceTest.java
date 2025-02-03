@@ -27,6 +27,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -73,11 +75,11 @@ public class ConcertScheduleSeatApplicationServiceTest {
 
       given(memberService.getMemberByUuid(uuid)).willReturn(member);
       given(concertScheduleService.getConcertScheduleById(concertScheduleId)).willReturn(concertSchedule);
-      given(concertScheduleSeatService.getConcertScheduleSeatWithDistributedLock(concertScheduleId, number)).willReturn(concertScheduleSeat);
+      given(concertScheduleSeatService.getConcertScheduleSeat(concertScheduleSeat.getId())).willReturn(concertScheduleSeat);
       given(timeProvider.now()).willReturn(LocalDateTime.of(2024, 10, 18, 0, 0));
       seat.setUpdatedAt(timeProvider.now().minusMinutes(6));
 
-      sut.createConcertScheduleSeatReservationWithDistributedLock(uuid, concertScheduleId, number);
+      sut.reserveConcertScheduleSeats(List.of(concertScheduleSeat.getId()));
     }
 
     @Test
@@ -104,11 +106,11 @@ public class ConcertScheduleSeatApplicationServiceTest {
 
       given(memberService.getMemberByUuid(uuid)).willReturn(member);
       given(concertScheduleService.getConcertScheduleById(concertScheduleId)).willReturn(concertSchedule);
-      given(concertScheduleSeatService.getConcertScheduleSeatWithDistributedLock(concertScheduleId, number)).willReturn(concertScheduleSeat);
+      given(concertScheduleSeatService.getConcertScheduleSeat(concertScheduleSeat.getId())).willReturn(concertScheduleSeat);
       given(timeProvider.now()).willReturn(LocalDateTime.of(2024, 10, 18, 0, 0));
       seat.setUpdatedAt(timeProvider.now().minusMinutes(4));
 
-      assertThrows(CustomException.class, () -> sut.createConcertScheduleSeatReservationWithDistributedLock(uuid, concertScheduleId, number));
+      assertThrows(CustomException.class, () -> sut.reserveConcertScheduleSeats(List.of(concertScheduleSeat.getId())));
     }
   }
 }

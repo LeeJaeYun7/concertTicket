@@ -101,11 +101,10 @@ public class ConcertScheduleEntitySeatServiceTest {
       ConcertSeatGradeEntity allSeatGrade = ConcertSeatGradeEntity.of(concert.getId(), SeatGrade.ALL, 100000);
       ConcertScheduleSeatEntity allConcertScheduleSeat = ConcertScheduleSeatEntity.of(seat.getId(), concertSchedule.getId(), allSeatGrade.getId(), ConcertScheduleSeatStatus.AVAILABLE);
 
-      when(concertScheduleSeatEntityDAO.findConcertScheduleSeatEntityWithDistributedLock(1L, 1))
-              .thenReturn(Optional.of(allConcertScheduleSeat));
+      when(concertScheduleSeatEntityDAO.findConcertScheduleSeatEntity(1L)).thenReturn(Optional.of(allConcertScheduleSeat));
       when(timeProvider.now()).thenReturn(LocalDateTime.of(2024, 10, 18, 0, 0));
 
-      sut.changeUpdatedAtWithDistributedLock(1L, 1);
+      sut.changeStatusAndUpdatedAt(1L);
 
       assertEquals(allConcertScheduleSeat.getUpdatedAt(), LocalDateTime.of(2024, 10, 18, 0, 0));
     }
@@ -130,10 +129,10 @@ public class ConcertScheduleEntitySeatServiceTest {
       ConcertSeatGradeEntity allSeatGrade = ConcertSeatGradeEntity.of(concert.getId(), SeatGrade.ALL, 100000);
       ConcertScheduleSeatEntity allConcertScheduleSeat = ConcertScheduleSeatEntity.of(seat.getId(), concertSchedule.getId(), allSeatGrade.getId(), ConcertScheduleSeatStatus.AVAILABLE);
 
-      when(concertScheduleSeatEntityDAO.findConcertScheduleSeatEntityWithDistributedLock(1L, 1))
+      when(concertScheduleSeatEntityDAO.findConcertScheduleSeatEntity(1L))
               .thenReturn(Optional.of(allConcertScheduleSeat));
 
-      sut.updateSeatStatus(1L, 1, ConcertScheduleSeatStatus.RESERVED);
+      sut.updateConcertScheduleSeatStatus(1L, ConcertScheduleSeatStatus.RESERVED);
 
       assertEquals(allConcertScheduleSeat.getStatus(), ConcertScheduleSeatStatus.RESERVED);
     }

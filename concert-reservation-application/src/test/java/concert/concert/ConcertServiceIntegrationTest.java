@@ -1,12 +1,12 @@
 package concert.concert;
 
-import concert.commons.utils.TimeProvider;
 import concert.concert.fixtures.ConcertEntityFixtureFactory;
 import concert.domain.concert.entities.ConcertEntity;
 import concert.domain.concert.services.ConcertService;
 import concert.domain.concert.cache.ConcertCache;
 import concert.domain.concert.entities.dao.ConcertEntityDAO;
-import concert.domain.reservation.entities.dao.ReservationRepository;
+import concert.domain.order.entities.dao.ReservationEntityDAO;
+import concert.domain.shared.utils.TimeProvider;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ public class ConcertServiceIntegrationTest {
   @Autowired
   private TimeProvider timeProvider;
   @Autowired
-  private ReservationRepository reservationRepository;
+  private ReservationEntityDAO reservationEntityDAO;
   @Autowired
   private ConcertCache concertCache;
   @Autowired

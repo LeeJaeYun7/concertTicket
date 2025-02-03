@@ -16,7 +16,7 @@ import concert.domain.concerthall.entities.ConcertHallEntity;
 import concert.domain.concerthall.entities.dao.ConcertHallEntityDAO;
 import concert.domain.concerthall.entities.ConcertHallSeatEntity;
 import concert.domain.concerthall.entities.dao.ConcertHallSeatEntityDAO;
-import concert.domain.reservation.entities.dao.ReservationRepository;
+import concert.domain.order.entities.dao.ReservationEntityDAO;
 import concert.domain.shared.utils.TimeProvider;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class ConcertScheduleIntegrationTest {
   @Autowired
   private ConcertHallSeatEntityDAO concertHallSeatEntityDAO;
   @Autowired
-  private ReservationRepository reservationRepository;
+  private ReservationEntityDAO reservationEntityDAO;
   @Autowired
   private ConcertEntityDAO concertEntityDAO;
   @Autowired

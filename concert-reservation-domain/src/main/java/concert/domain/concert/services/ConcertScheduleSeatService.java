@@ -9,17 +9,16 @@ import concert.domain.concerthall.entities.ConcertHallSeatEntity;
 import concert.domain.shared.utils.TimeProvider;
 import concert.infrastructure.distributedlock.DistributedLock;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ConcertScheduleSeatService {
 
   private final TimeProvider timeProvider;
@@ -53,6 +52,7 @@ public class ConcertScheduleSeatService {
 
     for(ConcertHallSeatEntity concertHallSeatEntity : concertHallSeatEntities){
       long concertHallSeatId = concertHallSeatEntity.getId();
+
       if(availableConcertHallSeatIds.contains(concertHallSeatId)){
         availableConcertScheduleSeatNumbers.add(concertHallSeatEntity.getNumber());
       }
@@ -61,29 +61,26 @@ public class ConcertScheduleSeatService {
     return availableConcertScheduleSeatNumbers;
   }
 
-  public void changeUpdatedAtWithDistributedLock(long concertHallId, long number) {
-    String lockName = "SEAT_RESERVATION:" + concertHallId + ":" + number;
-
-    ConcertScheduleSeatEntity concertScheduleSeat = getConcertScheduleSeatWithDistributedLock(concertHallId, number);
-    LocalDateTime now = timeProvider.now();
-    concertScheduleSeat.changeUpdatedAt(now);
+  public void changeStatusAndUpdatedAt(long concertScheduleSeatId) {
+      LocalDateTime now = timeProvider.now();
+      ConcertScheduleSeatEntity concertScheduleSeat = getConcertScheduleSeat(concertScheduleSeatId);
+      concertScheduleSeat.updateStatus(ConcertScheduleSeatStatus.PENDING);
+      concertScheduleSeat.changeUpdatedAt(now);
   }
 
-
-  public void updateSeatStatus(long concertHallId, long number, ConcertScheduleSeatStatus status) {
-    ConcertScheduleSeatEntity concertScheduleSeat = getConcertScheduleSeatWithDistributedLock(concertHallId, number);
+  public void updateConcertScheduleSeatStatus(long concertScheduleSeatId, ConcertScheduleSeatStatus status) {
+    ConcertScheduleSeatEntity concertScheduleSeat = getConcertScheduleSeat(concertScheduleSeatId);
     concertScheduleSeat.updateStatus(status);
   }
 
-  public ConcertScheduleSeatEntity getConcertScheduleSeat(long concertScheduleId, long concertHallSeatId) {
-    return concertScheduleSeatEntityDAO.findConcertScheduleSeatEntity(concertScheduleId, concertHallSeatId)
-            .orElseThrow(() -> new ConcertException(ConcertExceptionType.CONCERT_SCHEDULE_SEAT_NOT_FOUND));
+  public ConcertScheduleSeatEntity getConcertScheduleSeat(long concertScheduleSeatId) {
+    return concertScheduleSeatEntityDAO.findConcertScheduleSeatEntity(concertScheduleSeatId)
+                                       .orElseThrow(() -> new ConcertException(ConcertExceptionType.CONCERT_SCHEDULE_SEAT_NOT_FOUND));
   }
 
-
-  @DistributedLock(key = "#concertHallId + '_' + #number", waitTime = 60, leaseTime = 300000, timeUnit = TimeUnit.MILLISECONDS)
-  public ConcertScheduleSeatEntity getConcertScheduleSeatWithDistributedLock(long concertScheduleId, long concertHallSeatNumber) {
-    return concertScheduleSeatEntityDAO.findConcertScheduleSeatEntityWithDistributedLock(concertScheduleId, concertHallSeatNumber)
-            .orElseThrow(() -> new ConcertException(ConcertExceptionType.CONCERT_SCHEDULE_SEAT_NOT_FOUND));
+  @DistributedLock(key = "'CONCERT_SCHEDULE_SEAT_RESERVATION:' + #concertScheduleSeatId", waitTime = 60, leaseTime = 300000, timeUnit = TimeUnit.MILLISECONDS)
+  public Optional<ConcertScheduleSeatEntity> reserveConcertScheduleSeat(long concertScheduleSeatId) {
+    log.info("reserveConcertScheduleSeat execute! concertScheduleSeatId={}", concertScheduleSeatId);
+    return concertScheduleSeatEntityDAO.findConcertScheduleSeatEntity(concertScheduleSeatId);
   }
 }

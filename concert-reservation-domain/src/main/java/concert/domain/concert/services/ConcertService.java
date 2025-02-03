@@ -6,7 +6,7 @@ import concert.domain.concert.entities.ConcertEntity;
 import concert.domain.concert.entities.dao.ConcertEntityDAO;
 import concert.domain.concert.exceptions.ConcertException;
 import concert.domain.concert.exceptions.ConcertExceptionType;
-import concert.domain.reservation.entities.dao.ReservationRepository;
+import concert.domain.order.entities.dao.ReservationEntityDAO;
 import concert.domain.shared.utils.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class ConcertService {
 
   private final TimeProvider timeProvider;
   private final ConcertEntityDAO concertEntityDAO;
-  private final ReservationRepository reservationRepository;
+  private final ReservationEntityDAO reservationEntityDAO;
   private final ConcertCache concertCache;
 
   public ConcertEntity getConcertById(long concertId) {
@@ -45,7 +45,7 @@ public class ConcertService {
     LocalDateTime now = timeProvider.now();
     LocalDateTime threeDaysAgo = now.minus(Duration.ofHours(72));
 
-    List<ConcertEntity> top30concerts = reservationRepository.findTop30Concerts(threeDaysAgo);
+    List<ConcertEntity> top30concerts = reservationEntityDAO.findTop30Concerts(threeDaysAgo);
     concertCache.saveTop30Concerts(top30concerts);
   }
 
@@ -54,7 +54,7 @@ public class ConcertService {
     LocalDateTime now = timeProvider.now();
     LocalDateTime threeDaysAgo = now.minus(Duration.ofHours(72));
 
-    return reservationRepository.findTop30Concerts(threeDaysAgo);
+    return reservationEntityDAO.findTop30Concerts(threeDaysAgo);
   }
 
   public List<ConcertEntity> getTop30Concerts() throws JsonProcessingException {
@@ -66,6 +66,6 @@ public class ConcertService {
     LocalDateTime now = timeProvider.now();
     LocalDateTime threeDaysAgo = now.minus(Duration.ofHours(72));
 
-    return reservationRepository.findTop30Concerts(threeDaysAgo);
+    return reservationEntityDAO.findTop30Concerts(threeDaysAgo);
   }
 }

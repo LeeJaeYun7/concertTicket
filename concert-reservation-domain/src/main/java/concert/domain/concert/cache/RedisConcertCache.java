@@ -1,8 +1,7 @@
 package concert.domain.concert.cache;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import concert.domain.concert.entities.ConcertEntity;
+import concert.domain.shared.utils.DomainJsonConverter;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,15 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RedisConcertCache implements ConcertCache {
 
+    private final DomainJsonConverter domainJsonConverter;
     private final RedissonClient redisson;
-
     private static final String TOP30_CONCERTS = "top30concerts";
-    private final ObjectMapper objectMapper;
 
     @CircuitBreaker(name = "redisCircuitBreaker", fallbackMethod = "fallbackSaveConcerts")
-    public void saveTop30Concerts(List<ConcertEntity> concerts) throws JsonProcessingException {
+        public void saveTop30Concerts(List<ConcertEntity> concerts){
         RMap<String, String> top30concertMap = redisson.getMap(TOP30_CONCERTS);
-        String top30concertListJson = objectMapper.writeValueAsString(concerts);
+        String top30concertListJson = domainJsonConverter.convertToJson(concerts);
 
         top30concertMap.put("top30concerts", top30concertListJson);
         top30concertMap.expire(Duration.ofMinutes(5).plusSeconds(10));
@@ -37,14 +35,14 @@ public class RedisConcertCache implements ConcertCache {
     }
 
     @CircuitBreaker(name = "redisCircuitBreaker", fallbackMethod = "fallbackSaveConcerts")
-    public List<ConcertEntity> findTop30Concerts() throws JsonProcessingException {
+    public List<ConcertEntity> findTop30Concerts() {
         RMap<String, String> top30concertMap = redisson.getMap(TOP30_CONCERTS);
 
         String top30concertListJson = top30concertMap.get("top30concerts");
 
         if (top30concertListJson != null && !top30concertListJson.isEmpty()) {
             log.info("Retrieved top 30 concerts from Redis.");
-            return objectMapper.readValue(top30concertListJson, objectMapper.getTypeFactory().constructCollectionType(List.class, ConcertEntity.class));
+            return domainJsonConverter.convertFromJsonToList(top30concertListJson, ConcertEntity.class);
         } else {
             log.warn("No top 30 concerts found in Redis.");
             return null;
