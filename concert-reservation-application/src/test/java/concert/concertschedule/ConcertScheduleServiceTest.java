@@ -72,7 +72,7 @@ public class ConcertScheduleServiceTest {
       given(concertScheduleEntityDAO.findAllAfterNowByConcertId(1L, timeProvider.now())).willReturn(List.of(IUconcertSchedule));
       given(concertScheduleSeatService.getAllAvailableConcertScheduleSeats(IUconcertSchedule.getId())).willReturn(List.of(IUconcertScheduleSeat));
 
-      List<LocalDateTime> result = sut.getAllAvailableDateTimes(1L);
+      List<LocalDateTime> result = sut.getActiveConcertSchedules(1L);
 
       assertEquals(1, result.size());
     }

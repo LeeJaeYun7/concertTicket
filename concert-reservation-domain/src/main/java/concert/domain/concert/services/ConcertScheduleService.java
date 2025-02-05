@@ -30,7 +30,7 @@ public class ConcertScheduleService {
 
     // getAllAvailableDateTimes는 특정 콘서트에 대해 모든 예약 가능한 일정을 반환하는 메소드입니다.
     // 콘서트 일정의 좌석을 조사해서, 예약 가능한 좌석이 1개 이상 존재한다면, 해당 일정을 리턴합니다.
-    public List<LocalDateTime> getAllAvailableDateTimes(long concertId) {
+    public List<LocalDateTime> getActiveConcertSchedules(long concertId) {
         LocalDateTime now = timeProvider.now();
 
         // 특정 콘서트에 대하여 현재 시각 이후의 모든 콘서트 일정을 찾습니다.

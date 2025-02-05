@@ -14,7 +14,7 @@ public class TokenResponse {
 
     public static TokenResponse of(String token){
         return TokenResponse.builder()
-                .token(token)
-                .build();
+                            .token(token)
+                            .build();
     }
 }

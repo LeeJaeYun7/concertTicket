@@ -158,14 +158,14 @@ public class ConcertScheduleIntegrationTest {
     @Test
     @DisplayName("총 스케줄이_2개인 경우 2개를 가져온다.")
     void 총_스케줄이_2개인_경우_2개를_가져온다() {
-      List<LocalDateTime> result = sut.getAllAvailableDateTimes(savedFirstConcert.getId());
+      List<LocalDateTime> result = sut.getActiveConcertSchedules(savedFirstConcert.getId());
       assertEquals(2, result.size());
     }
 
     @Test
     @DisplayName("총 스케줄이_2개인 경우 해당하는 1개를 가져온다.")
     void 총_스케줄이_2개인_경우_해당하는_1개를_가져온다() {
-      List<LocalDateTime> result = sut.getAllAvailableDateTimes(savedSecondConcert.getId());
+      List<LocalDateTime> result = sut.getActiveConcertSchedules(savedSecondConcert.getId());
       assertEquals(1, result.size());
     }
   }

@@ -92,11 +92,11 @@ public class ConcertScheduleApplicationServiceTest {
       given(concertService.getConcertById(concertId))
               .willReturn(concert);
 
-      given(concertScheduleService.getAllAvailableDateTimes(concertId))
+      given(concertScheduleService.getActiveConcertSchedules(concertId))
               .willReturn(List.of(firstSchedule.getDateTime(), secondSchedule.getDateTime()));
 
       // when
-      List<LocalDateTime> availableDateTimes = sut.getAvailableDateTimes(concertId);
+      List<LocalDateTime> availableDateTimes = sut.getActiveConcertSchedules(concertId);
 
       // then
       assertEquals(2, availableDateTimes.size());
@@ -109,11 +109,11 @@ public class ConcertScheduleApplicationServiceTest {
       given(concertService.getConcertById(concertId))
               .willReturn(concert);
 
-      given(concertScheduleService.getAllAvailableDateTimes(concertId))
+      given(concertScheduleService.getActiveConcertSchedules(concertId))
               .willReturn(List.of());
 
       // when
-      List<LocalDateTime> availableDateTimes = sut.getAvailableDateTimes(concertId);
+      List<LocalDateTime> availableDateTimes = sut.getActiveConcertSchedules(concertId);
 
       // then
       assertEquals(0, availableDateTimes.size());

@@ -3,7 +3,7 @@ package concert.interfaces.concert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import concert.application.concert.business.ConcertScheduleApplicationService;
 import concert.interfaces.concert.request.ConcertScheduleCreateRequest;
-import concert.interfaces.concert.response.AvailableDateTimesResponse;
+import concert.interfaces.concert.response.ActiveConcertSchedulesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +28,10 @@ public class ConcertScheduleController {
   }
 
   @GetMapping("/api/v1/concertSchedule")
-  public ResponseEntity<AvailableDateTimesResponse> retrieveAvailableDateTimes(@RequestParam(value = "concertId") long concertId) {
-    List<LocalDateTime> availableDateTimes = concertScheduleApplicationService.getAvailableDateTimes(concertId);
-    AvailableDateTimesResponse availableDateTimesResponse = new AvailableDateTimesResponse(availableDateTimes);
+  public ResponseEntity<ActiveConcertSchedulesResponse> retrieveActiveConcertSchedules(@RequestParam(value = "concertId") long concertId) {
+    List<LocalDateTime> availableDateTimes = concertScheduleApplicationService.getActiveConcertSchedules(concertId);
+    ActiveConcertSchedulesResponse activeConcertSchedules = new ActiveConcertSchedulesResponse(availableDateTimes);
 
-    return ResponseEntity.status(HttpStatus.OK).body(availableDateTimesResponse);
+    return ResponseEntity.status(HttpStatus.OK).body(activeConcertSchedules);
   }
 }

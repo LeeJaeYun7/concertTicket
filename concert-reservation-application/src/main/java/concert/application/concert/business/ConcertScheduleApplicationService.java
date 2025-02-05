@@ -21,8 +21,8 @@ public class ConcertScheduleApplicationService {
     concertScheduleService.createConcertSchedule(concert, dateTime);
   }
 
-  public List<LocalDateTime> getAvailableDateTimes(long concertId) {
+  public List<LocalDateTime> getActiveConcertSchedules(long concertId) {
     concertService.getConcertById(concertId);
-    return concertScheduleService.getAllAvailableDateTimes(concertId);
+    return concertScheduleService.getActiveConcertSchedules(concertId);
   }
 }

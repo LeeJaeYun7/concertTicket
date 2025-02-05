@@ -16,10 +16,10 @@ import java.util.List;
 public class ConcertScheduleSeatController {
   private final ConcertScheduleSeatApplicationService concertScheduleSeatApplicationService;
 
-  @GetMapping("/api/v1/concertScheduleSeat/available")
-  public ResponseEntity<SeatNumbersResponse> retrieveAvailableConcertScheduleSeats(@RequestParam(value = "concertScheduleId") long concertScheduleId) {
-    List<Long> availableSeatNumbers = concertScheduleSeatApplicationService.getAvailableConcertScheduleSeatNumbers(concertScheduleId);
-    SeatNumbersResponse seatNumbersResponse = new SeatNumbersResponse(availableSeatNumbers);
+  @GetMapping("/api/v1/concertScheduleSeat/active")
+  public ResponseEntity<SeatNumbersResponse> retrieveActiveConcertScheduleSeats(@RequestParam(value = "concertScheduleId") long concertScheduleId) {
+    List<Long> activeSeatNumbers = concertScheduleSeatApplicationService.getActiveConcertScheduleSeatNumbers(concertScheduleId);
+    SeatNumbersResponse seatNumbersResponse = new SeatNumbersResponse(activeSeatNumbers);
 
     return ResponseEntity.status(HttpStatus.OK).body(seatNumbersResponse);
   }

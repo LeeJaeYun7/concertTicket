@@ -4,9 +4,7 @@ import concert.domain.concert.services.ConcertScheduleService;
 import concert.domain.concert.services.ConcertService;
 import concert.domain.concerthall.services.ConcertHallSeatService;
 import concert.domain.concerthall.entities.ConcertHallSeatEntity;
-import concert.domain.member.services.MemberService;
 import concert.domain.concert.services.ConcertScheduleSeatService;
-import concert.domain.shared.utils.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,14 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConcertScheduleSeatApplicationService {
 
-  private final TimeProvider timeProvider;
-  private final MemberService memberService;
   private final ConcertService concertService;
   private final ConcertHallSeatService concertHallSeatService;
   private final ConcertScheduleService concertScheduleService;
   private final ConcertScheduleSeatService concertScheduleSeatService;
 
-  public List<Long> getAvailableConcertScheduleSeatNumbers(long concertScheduleId) {
+  public List<Long> getActiveConcertScheduleSeatNumbers(long concertScheduleId) {
     concertScheduleService.getConcertScheduleById(concertScheduleId);
 
     long concertId = concertScheduleService.getConcertScheduleById(concertScheduleId).getConcertId();

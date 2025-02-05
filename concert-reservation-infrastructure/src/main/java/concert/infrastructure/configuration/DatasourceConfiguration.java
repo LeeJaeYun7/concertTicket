@@ -1,4 +1,4 @@
-package concert.application.configuration;
+package concert.infrastructure.configuration;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
