@@ -1,8 +1,8 @@
 package concert.domain.waitingqueue.services;
 
-import concert.domain.waitingqueue.entities.enums.RedisKey;
 import concert.domain.waitingqueue.entities.WaitingDTO;
 import concert.domain.waitingqueue.entities.dao.*;
+import concert.domain.waitingqueue.entities.enums.RedisKey;
 import concert.domain.waitingqueue.entities.vo.WaitingRankVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +31,8 @@ public class WaitingQueueService {
   private final WaitingQueueStatusPublisher waitingQueueStatusPublisher;
 
   private final WaitingQueueStatusDAO waitingQueueStatusDAO;
+
+  private final TokenHeartbeatDAO tokenHeartbeatDAO;
 
   private final TokenPublisher tokenPublisher;
 
@@ -69,7 +71,7 @@ public class WaitingQueueService {
 
   public void migrateFromWaitingToActiveQueue() {
     // 분산 락을 사용하여 동시에 한 서버만 작업을 하도록 함
-    RLock lock = redissonClient.getLock(RedisKey.ACTIVE_QUEUE_LOCK.getKey());
+    RLock lock = redissonClient.getLock(RedisKey.ACTIVE_QUEUE_LOCK);
     lock.lock();
 
     try {
@@ -131,6 +133,14 @@ public class WaitingQueueService {
       tokenSessionDAO.removeTokenSession(token);
     }
   }
+
+  public void removeTokenHeartbeat(String token){
+      boolean tokenHeartbeatExists = tokenHeartbeatDAO.isTokenHeartbeatExists(token);
+      if(tokenHeartbeatExists){
+          tokenHeartbeatDAO.removeTokenHeartbeat(token);
+      }
+  }
+
   public void clearAllQueues(){
      waitingQueueDAO.clearWaitingQueue();
      activeQueueDAO.clearActiveQueue();
@@ -140,6 +150,7 @@ public class WaitingQueueService {
       removeTokenFromQueues(token);
       removeActivatedToken(token);
       removeTokenSession(token);
+      removeTokenHeartbeat(token);
   }
 
   public String getWaitingQueueStatus(){
@@ -150,7 +161,9 @@ public class WaitingQueueService {
     return waitingQueueStatusDAO.getWaitingQueueStatusLastChanged();
   }
 
-  public void changeWaitingQueueStatus(String status, long now){
+  public void changeWaitingQueueStatus(String status){
+    long now = System.currentTimeMillis();
+
     waitingQueueStatusDAO.changeWaitingQueueStatus(status, now);
     waitingQueueStatusPublisher.publishWaitingQueueStatus(status);
     // 대기열이 비활성화되면, 대기열, 활성화열, 그리고 활성화토큰 정보를 모두 삭제처리하였습니다

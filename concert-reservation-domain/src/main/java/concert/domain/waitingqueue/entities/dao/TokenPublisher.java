@@ -1,7 +1,7 @@
 package concert.domain.waitingqueue.entities.dao;
 
-import concert.domain.waitingqueue.entities.enums.RedisKey;
 import concert.domain.waitingqueue.entities.WaitingDTO;
+import concert.domain.waitingqueue.entities.enums.RedisKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RTopic;
@@ -22,7 +22,7 @@ public class TokenPublisher {
     public void publishAllActiveTokens(Collection<WaitingDTO> tokenList){
         List<String> tokens = tokenList.stream().map(WaitingDTO::getToken).collect(Collectors.toList());
 
-        RTopic topic = redissonClient.getTopic(RedisKey.TOKEN_PUB_SUB_CHANNEL.getKey());
+        RTopic topic = redissonClient.getTopic(RedisKey.TOKEN_PUB_SUB_CHANNEL);
         topic.publish(tokens);  // tokenList를 발행
     }
 }

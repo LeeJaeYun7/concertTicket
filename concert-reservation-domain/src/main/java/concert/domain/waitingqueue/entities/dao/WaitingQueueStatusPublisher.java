@@ -15,7 +15,7 @@ public class WaitingQueueStatusPublisher {
     private final RedissonClient redisson;
 
     public void publishWaitingQueueStatus(String status) {
-        RTopic topic = redisson.getTopic(RedisKey.WAITING_QUEUE_STATUS_PUB_SUB_CHANNEL.getKey());
+        RTopic topic = redisson.getTopic(RedisKey.WAITING_QUEUE_STATUS_PUB_SUB_CHANNEL);
         topic.publish(status);
     }
 }
