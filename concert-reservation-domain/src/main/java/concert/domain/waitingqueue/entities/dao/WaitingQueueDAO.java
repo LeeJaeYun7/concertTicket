@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Component
@@ -26,9 +29,17 @@ public class WaitingQueueDAO {
 
   public Collection<WaitingDTO> getAllWaitingTokens() {
     RSortedSet<String> waitingQueue = redisson.getSortedSet(RedisKey.WAITING_QUEUE);
-    Collection<String> tokenList = waitingQueue.readAll();
-
+    List<String> tokenList = new ArrayList<>(waitingQueue);
     return tokenList.stream().map(WaitingDTO::parse).collect(Collectors.toList());
+  }
+
+  public List<WaitingDTO> getAllWaitingTokensWithRank() {
+    RSortedSet<String> waitingQueue = redisson.getSortedSet(RedisKey.WAITING_QUEUE);
+    List<String> tokenList = new ArrayList<>(waitingQueue); // 리스트로 변환 (순서 보장)
+
+    return IntStream.range(0, tokenList.size())
+            .mapToObj(index -> WaitingDTO.parse(tokenList.get(index), index + 1)) // index+1로 순위 추가
+            .collect(Collectors.toList());
   }
 
   public Collection<WaitingDTO> getAllWaitingTokens(long transferCount) {
@@ -64,9 +75,10 @@ public class WaitingQueueDAO {
 
 
   public String storeTokenIfWaitingQueueActive(WaitingDTO waitingDTO) {
-    RBucket<String> waitingQueueStatusBucket = redisson.getBucket(RedisKey.WAITING_QUEUE_STATUS);
+    RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS);
+    String currentStatus = waitingQueueStatusMap.getOrDefault("status", "inactive");
 
-    if (!RedisKey.WAITING_QUEUE_STATUS_ACTIVE.equals(waitingQueueStatusBucket.get())) {
+    if (!RedisKey.WAITING_QUEUE_STATUS_ACTIVE.equals(currentStatus)) {
       return waitingDTO.getToken();
     }
 

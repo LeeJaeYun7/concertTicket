@@ -15,17 +15,7 @@ public class TokenHeartbeatDAO {
 
     private final RedissonClient redisson;
 
-    public boolean isTokenHeartbeatExists(String token){
-        RMap<String, String> tokenHeartbeatMap = redisson.getMap(RedisKey.TOKEN_HEARTBEAT_KEY);
-        return tokenHeartbeatMap.containsKey(token);
-    }
-
-    public RMapCache<String, String> getTokenHeartbeat() {
-        return redisson.getMapCache(RedisKey.TOKEN_HEARTBEAT_KEY);
-    }
-
-    public void removeTokenHeartbeat(String token) {
-        RMap<String, String> tokenHeartbeatMap = redisson.getMap(RedisKey.TOKEN_HEARTBEAT_KEY);
-        tokenHeartbeatMap.remove(token);
+    public RMapCache<String, String> getTokenHeartbeatMap() {
+        return redisson.getMapCache(RedisKey.TOKEN_HEARTBEAT);
     }
 }

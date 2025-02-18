@@ -43,8 +43,7 @@ public class WaitingQueueController {
 
   @GetMapping("/api/v1/waitingQueue/rank")
   public ResponseEntity<WaitingRankResponse> retrieveWaitingRank(@RequestParam(value = "token") String token) {
-      String uuid = token.split(":")[1];
-      WaitingRankVO waitingRankVo = waitingQueueApplicationService.retrieveWaitingRank(uuid);
+      WaitingRankVO waitingRankVo = waitingQueueApplicationService.retrieveWaitingRank(token);
       WaitingRankResponse waitingRankResponse = WaitingRankResponse.of(waitingRankVo.getWaitingRank(), waitingRankVo.getStatus());
 
       return ResponseEntity.status(HttpStatus.CREATED).body(waitingRankResponse);

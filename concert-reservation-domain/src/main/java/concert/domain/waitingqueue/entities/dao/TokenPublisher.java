@@ -1,5 +1,6 @@
 package concert.domain.waitingqueue.entities.dao;
 
+import concert.domain.shared.utils.DomainJsonConverter;
 import concert.domain.waitingqueue.entities.WaitingDTO;
 import concert.domain.waitingqueue.entities.enums.RedisKey;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,19 @@ import java.util.stream.Collectors;
 public class TokenPublisher {
 
     private final RedissonClient redissonClient;
+    private final DomainJsonConverter domainJsonConverter;
 
     public void publishAllActiveTokens(Collection<WaitingDTO> tokenList){
         List<String> tokens = tokenList.stream().map(WaitingDTO::getToken).collect(Collectors.toList());
+        String message = domainJsonConverter.convertToJson(tokens);
+        RTopic topic = redissonClient.getTopic(RedisKey.ACTIVE_TOKEN_PUB_SUB_CHANNEL);
+        topic.publish(message);  // tokenList를 발행
+    }
 
-        RTopic topic = redissonClient.getTopic(RedisKey.TOKEN_PUB_SUB_CHANNEL);
-        topic.publish(tokens);  // tokenList를 발행
+    public void publishAllWaitingTokens(Collection<WaitingDTO> tokenList){
+        String message = domainJsonConverter.convertToJson(tokenList);
+        RTopic topic = redissonClient.getTopic(RedisKey.WAITING_TOKEN_PUB_SUB_CHANNEL);
+        topic.publish(message);  // tokenList를 발행
+        log.info("publishAllWaitingTokens succeed");
     }
 }

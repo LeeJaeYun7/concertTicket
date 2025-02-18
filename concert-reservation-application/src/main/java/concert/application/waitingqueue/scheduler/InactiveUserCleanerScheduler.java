@@ -4,7 +4,7 @@ import concert.domain.waitingqueue.entities.dao.TokenHeartbeatDAO;
 import concert.domain.waitingqueue.services.WaitingQueueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RMap;
+import org.redisson.api.RMapCache;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class InactiveUserCleanerScheduler {
 
     @Scheduled(fixedRate = 10000)  // 10초마다 실행
     public void detectInactiveUsers() {
-        RMap<String, String> heartbeatMap = tokenHeartbeatDAO.getTokenHeartbeat();
+        RMapCache<String, String> heartbeatMap = tokenHeartbeatDAO.getTokenHeartbeatMap();
 
         // 현재 시간을 밀리초 단위로 구함
         long currentTime = System.currentTimeMillis();
@@ -54,8 +54,9 @@ public class InactiveUserCleanerScheduler {
         }
 
         for (String token : tokensToRemove) {
+            log.info("token remove, {}", token);
             heartbeatMap.remove(token);
-            waitingQueueService.removeUserTokenAndSession(token);
+            waitingQueueService.removeTokenFromQueues(token);
         }
     }
 }

@@ -28,7 +28,7 @@ public class TrafficScheduler {
     );
 
     // 매 5초마다 실행 (5,000ms)
-    @Scheduled(fixedRate = 5000)
+    // @Scheduled(fixedRate = 500000)
     public void aggregateTraffic() {
 
         long totalTraffic = 0;

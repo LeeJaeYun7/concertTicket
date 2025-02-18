@@ -15,17 +15,17 @@ public class WaitingQueueStatusDAO {
     private final RedissonClient redisson;
 
     public String getWaitingQueueStatus() {
-        RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS_KEY);
+        RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS);
         return waitingQueueStatusMap.getOrDefault("status", "inactive");
     }
 
     public String getWaitingQueueStatusLastChanged() {
-        RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS_KEY);
+        RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS);
         return waitingQueueStatusMap.getOrDefault("lastChanged", null);
     }
 
     public void changeWaitingQueueStatus(String status, long now) {
-        RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS_KEY);
+        RMap<String, String> waitingQueueStatusMap = redisson.getMap(RedisKey.WAITING_QUEUE_STATUS);
         waitingQueueStatusMap.put("status", status);
         waitingQueueStatusMap.put("lastChanged", String.valueOf(now));
     }

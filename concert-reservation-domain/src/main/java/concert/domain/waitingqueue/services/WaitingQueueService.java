@@ -24,18 +24,11 @@ public class WaitingQueueService {
 
   private final ActiveQueueDAO activeQueueDAO;
 
-  private final TokenSessionDAO tokenSessionDAO;
-
-  private final ActivatedTokenDAO activatedTokenDAO;
-
   private final WaitingQueueStatusPublisher waitingQueueStatusPublisher;
 
   private final WaitingQueueStatusDAO waitingQueueStatusDAO;
 
-  private final TokenHeartbeatDAO tokenHeartbeatDAO;
-
   private final TokenPublisher tokenPublisher;
-
   private static final String WAITING_QUEUE_STATUS_INACTIVE = "inactive";
   private static final long MAX_ACTIVE_QUEUE_SIZE = 5000L;
   private static final long MAX_TRANSFER_COUNT = 250L;
@@ -45,13 +38,13 @@ public class WaitingQueueService {
     return waitingQueueDAO.storeTokenIfWaitingQueueActive(waitingDTO);
   }
 
-  public WaitingRankVO retrieveWaitingRank(String uuid) {
+  public WaitingRankVO retrieveWaitingRank(String userToken) {
     Collection<WaitingDTO> tokenList = waitingQueueDAO.getAllWaitingTokens();
     long rank = 1L;
 
     // rank 계산
     for (WaitingDTO token : tokenList) {
-      if (token.isUuidEquals(uuid)) {
+      if (token.isUuidEquals(userToken)) {
         break;
       }
       rank += 1;
@@ -82,11 +75,13 @@ public class WaitingQueueService {
              return;
           }
 
+          transferCount = 0;
+
           Collection<WaitingDTO> tokenList = waitingQueueDAO.getAllWaitingTokens(transferCount);
 
-          if (tokenList.isEmpty()) {
-            return;
-          }
+          //if (tokenList.isEmpty()) {
+          //  return;
+          // }
 
           // 토큰 목록을 활성화열로 이동시킨다.
           activeQueueDAO.putActiveQueueToken(tokenList);
@@ -98,6 +93,11 @@ public class WaitingQueueService {
 
           // 토큰 목록을 대기열에서 삭제처리한다
           waitingQueueDAO.deleteWaitingQueueTokens(tokenList);
+
+          Collection<WaitingDTO> waitingTokenList = waitingQueueDAO.getAllWaitingTokensWithRank();
+          log.info("waitingTokenList size는? {}", waitingTokenList.size());
+          tokenPublisher.publishAllWaitingTokens(waitingTokenList);
+
         } finally {
           lock.unlock();  // 작업 완료 후 락을 해제
         }
@@ -120,37 +120,9 @@ public class WaitingQueueService {
     }
   }
 
-  public void removeActivatedToken(String token){
-    boolean activatedTokenExists = activatedTokenDAO.isActivatedTokenExists(token);
-    if(activatedTokenExists){
-      activatedTokenDAO.removeActivatedToken(token);
-    }
-  }
-
-  public void removeTokenSession(String token){
-    boolean tokenSessionExists = tokenSessionDAO.isTokenSessionExists(token);
-    if(tokenSessionExists){
-      tokenSessionDAO.removeTokenSession(token);
-    }
-  }
-
-  public void removeTokenHeartbeat(String token){
-      boolean tokenHeartbeatExists = tokenHeartbeatDAO.isTokenHeartbeatExists(token);
-      if(tokenHeartbeatExists){
-          tokenHeartbeatDAO.removeTokenHeartbeat(token);
-      }
-  }
-
   public void clearAllQueues(){
      waitingQueueDAO.clearWaitingQueue();
      activeQueueDAO.clearActiveQueue();
-     activatedTokenDAO.clearActivatedTokens();
-  }
-  public void removeUserTokenAndSession(String token) {
-      removeTokenFromQueues(token);
-      removeActivatedToken(token);
-      removeTokenSession(token);
-      removeTokenHeartbeat(token);
   }
 
   public String getWaitingQueueStatus(){

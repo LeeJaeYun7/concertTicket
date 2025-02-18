@@ -91,7 +91,7 @@ public class WaitingQueueApplicationService {
     return TokenVO.of(token);
   }
 
-  public WaitingRankVO retrieveWaitingRank(String uuid) {
-    return waitingQueueService.retrieveWaitingRank(uuid);
+  public WaitingRankVO retrieveWaitingRank(String token) {
+    return waitingQueueService.retrieveWaitingRank(token);
   }
 }
