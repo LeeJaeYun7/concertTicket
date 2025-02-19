@@ -2,6 +2,8 @@ package concert.application.waitingqueue.scheduler;
 
 import concert.domain.waitingqueue.entities.dao.TokenHeartbeatDAO;
 import concert.domain.waitingqueue.services.WaitingQueueService;
+import concert.infrastructure.distributedlock.DistributedLockAop;
+import concert.infrastructure.distributedlock.dao.TokenConcertScheduleSeatDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
@@ -19,7 +21,10 @@ public class InactiveUserCleanerScheduler {
 
     private final WaitingQueueService waitingQueueService;
     private final TokenHeartbeatDAO tokenHeartbeatDAO;
+    private final TokenConcertScheduleSeatDAO tokenConcertScheduleSeatDAO;
+    private final DistributedLockAop distributedLockAop;
     private static final long INACTIVITY_THRESHOLD = 30 * 1000; // 30초 (밀리초 단위)
+
 
     @Scheduled(fixedRate = 10000)  // 10초마다 실행
     public void detectInactiveUsers() {
@@ -57,6 +62,13 @@ public class InactiveUserCleanerScheduler {
             log.info("token remove, {}", token);
             heartbeatMap.remove(token);
             waitingQueueService.removeTokenFromQueues(token);
+
+            List<String> concertScheduleSeatIds = tokenConcertScheduleSeatDAO.findConcertScheduleSeatIdsByToken(token);
+
+            for(String concertScheduleSeatId: concertScheduleSeatIds){
+                distributedLockAop.unlockConcertScheduleSeat(concertScheduleSeatId);
+                tokenConcertScheduleSeatDAO.removeTokenScheduleSeat(concertScheduleSeatId);
+            }
         }
     }
 }

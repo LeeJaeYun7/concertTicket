@@ -79,8 +79,8 @@ public class ConcertScheduleSeatService {
   }
 
   @DistributedLock(key = "'CONCERT_SCHEDULE_SEAT_RESERVATION:' + #concertScheduleSeatId", waitTime = 60, leaseTime = 300000, timeUnit = TimeUnit.MILLISECONDS)
-  public Optional<ConcertScheduleSeatEntity> reserveConcertScheduleSeat(long concertScheduleSeatId) {
-    log.info("reserveConcertScheduleSeat execute! concertScheduleSeatId={}", concertScheduleSeatId);
+  public Optional<ConcertScheduleSeatEntity> reserveConcertScheduleSeat(String token, long concertScheduleSeatId) {
+    log.info("reserveConcertScheduleSeat execute! token = {}, concertScheduleSeatId={}", token, concertScheduleSeatId);
     return concertScheduleSeatEntityDAO.findConcertScheduleSeatEntity(concertScheduleSeatId);
   }
 }

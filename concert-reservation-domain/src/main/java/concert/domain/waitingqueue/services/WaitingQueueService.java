@@ -75,16 +75,13 @@ public class WaitingQueueService {
              return;
           }
 
-          transferCount = 0;
-
           Collection<WaitingDTO> tokenList = waitingQueueDAO.getAllWaitingTokens(transferCount);
 
-          //if (tokenList.isEmpty()) {
-          //  return;
-          // }
+          if (tokenList.isEmpty()) {
+              return;
+          }
 
-          // 토큰 목록을 활성화열로 이동시킨다.
-          activeQueueDAO.putActiveQueueToken(tokenList);
+          activeQueueDAO.migrateTokensFromWaitingQueueToActiveQueue(tokenList);
 
           // 토큰 목록을 Redis Pub/Sub을 통해 발행한다
           // 발행한 토큰 목록은 WebSocket 서버에서 Redis Pub/Sub을 통해 구독한다
@@ -95,7 +92,6 @@ public class WaitingQueueService {
           waitingQueueDAO.deleteWaitingQueueTokens(tokenList);
 
           Collection<WaitingDTO> waitingTokenList = waitingQueueDAO.getAllWaitingTokensWithRank();
-          log.info("waitingTokenList size는? {}", waitingTokenList.size());
           tokenPublisher.publishAllWaitingTokens(waitingTokenList);
 
         } finally {
@@ -116,7 +112,7 @@ public class WaitingQueueService {
     boolean activeQueueExists = activeQueueDAO.isTokenExistsInActiveQueue(waitingDTO);
 
     if(activeQueueExists){
-      activeQueueDAO.deleteActiveQueueToken(token);
+      activeQueueDAO.deleteActiveQueueToken(waitingDTO.getUuid());
     }
   }
 

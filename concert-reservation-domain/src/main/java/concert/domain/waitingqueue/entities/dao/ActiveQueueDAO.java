@@ -4,6 +4,7 @@ import concert.domain.waitingqueue.entities.WaitingDTO;
 import concert.domain.waitingqueue.entities.enums.RedisKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBatch;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
@@ -18,14 +19,19 @@ public class ActiveQueueDAO {
 
     private final RedissonClient redisson;
 
-    public void putActiveQueueToken(Collection<WaitingDTO> tokens) {
-        RMapCache<String, String> activeQueue = redisson.getMapCache(RedisKey.ACTIVE_QUEUE);  // RMapCache 사용
+    public void migrateTokensFromWaitingQueueToActiveQueue(Collection<WaitingDTO> tokens) {
+        RBatch batch = redisson.createBatch();
 
         for (WaitingDTO waitingDTO : tokens) {
             String uuid = waitingDTO.getUuid();
             String token = waitingDTO.getToken();
-            activeQueue.putIfAbsent(uuid, token, 300, TimeUnit.SECONDS);
+            // 활성화 큐에 추가
+            batch.getMapCache(RedisKey.ACTIVE_QUEUE).putIfAbsentAsync(uuid, token, 300, TimeUnit.SECONDS);
+            // 대기열에서 삭제
+            batch.getMapCache(RedisKey.WAITING_QUEUE).removeAsync(token);
         }
+        // 원자적으로 실행
+        batch.execute();
     }
 
     public int getActiveQueueSize() {

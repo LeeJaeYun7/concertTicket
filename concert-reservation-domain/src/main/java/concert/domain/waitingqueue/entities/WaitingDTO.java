@@ -50,7 +50,7 @@ public class WaitingDTO {
     String timestamp = split[0];
     String uuid = split[1];
 
-      return new WaitingDTO(timestamp, uuid, entry);
+    return new WaitingDTO(timestamp, uuid, entry);
   }
 
   public static WaitingDTO parse(String entry, long waitingRank) {
