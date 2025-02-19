@@ -16,6 +16,7 @@ import concert.domain.order.services.ReservationService;
 import concert.domain.order.vo.OrderVO;
 import concert.domain.concert.services.ConcertScheduleSeatService;
 import concert.domain.shared.utils.DomainJsonConverter;
+import concert.domain.waitingqueue.entities.dao.ActiveQueueDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class OrderTxService {
   private final ConcertScheduleService concertScheduleService;
   private final ReservationService reservationService;
   private final OrderEntityDAO orderEntityDAO;
+  private final ActiveQueueDAO activeQueueDAO;
 
   @Transactional
   public void createOrder(long concertId, long concertScheduleId, String uuid, List<Long> concertScheduleSeatIds, long totalPrice) {
@@ -67,6 +69,8 @@ public class OrderTxService {
     String name = getMember(uuid).getName();
     String concertName = getConcert(concertScheduleId).getName();
     LocalDateTime dateTime = getConcertSchedule(concertScheduleId).getDateTime();
+
+    activeQueueDAO.deleteActiveQueueToken(uuid);
 
     return OrderVO.of(name, concertName, dateTime, totalPrice);
   }

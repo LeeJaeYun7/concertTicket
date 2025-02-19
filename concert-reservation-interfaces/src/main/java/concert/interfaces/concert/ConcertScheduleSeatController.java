@@ -26,9 +26,10 @@ public class ConcertScheduleSeatController {
 
   @PostMapping("/api/v1/concertScheduleSeat/reservation")
   public ResponseEntity<ConcertScheduleSeatsResponse> reserveConcertScheduleSeats(@RequestBody ConcertScheduleSeatsRequest concertScheduleSeatsRequest) {
+    String token = concertScheduleSeatsRequest.token();
     List<Long> concertScheduleSeatIds = concertScheduleSeatsRequest.concertScheduleSeatIds();
 
-    concertScheduleSeatApplicationService.reserveConcertScheduleSeats(concertScheduleSeatIds);
+    concertScheduleSeatApplicationService.reserveConcertScheduleSeats(token, concertScheduleSeatIds);
 
     ConcertScheduleSeatsResponse response = new ConcertScheduleSeatsResponse(true);
     return ResponseEntity.status(HttpStatus.OK).body(response);
