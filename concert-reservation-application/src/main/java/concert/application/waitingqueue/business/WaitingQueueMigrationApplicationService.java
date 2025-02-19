@@ -1,5 +1,6 @@
 package concert.application.waitingqueue.business;
 
+import concert.application.waitingqueue.business.enums.WaitingQueueStatus;
 import concert.domain.waitingqueue.services.WaitingQueueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,10 @@ public class WaitingQueueMigrationApplicationService {
 
   private final WaitingQueueService waitingQueueService;
 
-  public void migrateFromWaitingToActiveQueue(long concertId) {
-    waitingQueueService.migrateFromWaitingToActiveQueue(concertId);
-    // 슬랙 알람을 보낸다거나, 다른 작업으로 noti 를 한다거나, 이벤트를 보낸다거나. 등등.
+  public void migrateFromWaitingToActiveQueue() {
+    String currentStatus = waitingQueueService.getWaitingQueueStatus();
+    if(WaitingQueueStatus.ACTIVE.equals(currentStatus)) {
+      waitingQueueService.migrateFromWaitingToActiveQueue();
+    }
   }
 }
