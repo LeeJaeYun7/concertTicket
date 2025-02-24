@@ -126,7 +126,8 @@ public class ConcertScheduleEntitySeatConcurrencyIntegrationTest {
 
         executorService.submit(() -> {
           try {
-            concertScheduleSeatApplicationService.reserveConcertScheduleSeats(List.of(1L));
+            String token = "12345";
+            concertScheduleSeatApplicationService.reserveConcertScheduleSeats(token, List.of(1L));
             successCount.incrementAndGet();
           } finally {
             latch.countDown();

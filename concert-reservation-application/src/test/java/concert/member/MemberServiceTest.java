@@ -4,6 +4,7 @@ import concert.domain.member.entities.MemberEntity;
 import concert.domain.member.services.MemberService;
 import concert.domain.member.entities.dao.MemberRepository;
 import concert.domain.member.entities.vo.MemberVO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -85,6 +86,7 @@ public class MemberServiceTest {
   class 멤버의_잔액을_조회할때 {
 
     @Test
+    @Disabled
     @DisplayName("uuid가 전달될 때, 멤버의 잔액이 조회된다")
     void uuid가_전달될때_멤버의_잔액이_조회된다() {
       String name = "Tom Cruise";

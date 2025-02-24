@@ -37,3 +37,7 @@ dependencies {
 
     api project(':concert-reservation-infrastructure')
 }
+
+springBoot {
+    mainClass = 'concert.interfaces.ConcertApplication'
+}

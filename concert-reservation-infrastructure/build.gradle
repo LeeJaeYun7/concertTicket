@@ -36,3 +36,7 @@ dependencies {
     implementation 'org.aspectj:aspectjweaver:1.9.7'
 
 }
+
+springBoot {
+    mainClass = 'concert.interfaces.ConcertApplication'
+}

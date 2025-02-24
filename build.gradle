@@ -13,6 +13,13 @@ java {
 	}
 }
 
+bootJar {
+	enabled = false
+}
+jar {
+	enabled = true
+}
+
 
 allprojects{
 	repositories {
@@ -96,5 +103,3 @@ subprojects{
 		testImplementation 'org.awaitility:awaitility'
 	}
 }
-
-
