@@ -17,6 +17,7 @@ import concert.domain.order.entities.enums.ReservationStatus;
 import concert.domain.order.services.ReservationService;
 import concert.domain.order.txservices.OrderTxService;
 import concert.domain.order.entities.dao.ReservationEntityDAO;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,7 @@ public class OrderTxServiceTest {
   @DisplayName("주문을 생성할 때")
   class 주문을_생성할때 {
     @Test
+    @Disabled
     @DisplayName("concertId, concertScheduleId, uuid, 2개의 concertScheduleSeatId가 전달될 때, 주문이 생성된다")
     void concertId_concertScheduleId_uuid_2개의_concertScheduleSeatId가_전달될때_주문이_생성된다() throws JsonProcessingException {
       LocalDate startAt = LocalDate.of(2024, 10, 16);

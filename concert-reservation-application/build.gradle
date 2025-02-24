@@ -49,3 +49,7 @@ task wrapper(type: Wrapper) {
 task prepareKotlinBuildScriptModel {
 
 }
+
+springBoot {
+    mainClass = 'concert.interfaces.ConcertApplication'
+}

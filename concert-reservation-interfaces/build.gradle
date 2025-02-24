@@ -8,7 +8,7 @@ jar {
 }
 
 bootJar {
-    enabled = false
+    enabled = true
 }
 
 dependencies {
@@ -37,4 +37,8 @@ dependencies {
 
     api project(':concert-reservation-application')
     api project(':concert-reservation-domain')
+}
+
+springBoot {
+    mainClass = 'concert.interfaces.ConcertApplication'
 }

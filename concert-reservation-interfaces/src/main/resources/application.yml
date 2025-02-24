@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/concertticket?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://mysql-container:3306/concertticket?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
     username: root
     password: 1234
 
@@ -19,12 +19,12 @@ spring:
   kafka:
     enabled: false
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:9092
       group-id: my_group
       enable-auto-commit: false
       auto-offset-reset: latest
@@ -33,7 +33,7 @@ spring:
 
 
 redis:
-  host: 127.0.0.1
+  host: redis-container
   port: 6379
 
 logging.level:
