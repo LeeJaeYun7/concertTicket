@@ -10,6 +10,10 @@
 ### 5. [Redis 분산락 Deep Dive 발표](https://www.canva.com/design/DAGVN6DetjU/mnwdH7gKAJyBjOb2c4_waA/edit)
 ### 6. [콘서트 티켓 예약을 위한 Redis 대기열 아키텍처 설계](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/concert-ticket-waiting-queue.md)
 
+## 성능 개선
+
+### 1. [[#1] 서버 성능 개선하기 - 웹소켓 연결 테스트](https://bryandev.tistory.com/1794)
+
 <!--### 17. [대기 번호 조회 및 좌석 선점 기능 개선: Polling API -> WebSocket](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/REDIS_WAITING_QUEUE_QUERY_REPORT.md)
 ### 18. [API 부하 테스트 분석과 가상 장애 대응 방안에 관한 보고서](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/ISSUE_RESPONSE_REPORT.md)
 <!-- ### 12. ['26만 row 예약 테이블' 조회 시 쿼리 튜닝 보고서](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/INDEX_REPORT.md)
