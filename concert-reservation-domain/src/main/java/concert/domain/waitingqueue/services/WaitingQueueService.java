@@ -2,23 +2,19 @@ package concert.domain.waitingqueue.services;
 
 import concert.domain.waitingqueue.entities.WaitingDTO;
 import concert.domain.waitingqueue.entities.dao.*;
-import concert.domain.waitingqueue.entities.enums.RedisKey;
 import concert.domain.waitingqueue.entities.vo.WaitingRankVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.*;
 
-import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class WaitingQueueService {
-
-  private final RedissonClient redissonClient;
 
   private final WaitingQueueDAO waitingQueueDAO;
 
@@ -63,40 +59,32 @@ public class WaitingQueueService {
   }
 
   public void migrateFromWaitingToActiveQueue() {
-    // 분산 락을 사용하여 동시에 한 서버만 작업을 하도록 함
-    RLock lock = redissonClient.getLock(RedisKey.ACTIVE_QUEUE_LOCK);
-    lock.lock();
 
-    try {
-          long activeQueueSize = activeQueueDAO.getActiveQueueSize();
-          long transferCount = Math.min(MAX_ACTIVE_QUEUE_SIZE - activeQueueSize, MAX_TRANSFER_COUNT);
+      long activeQueueSize = activeQueueDAO.getActiveQueueSize();
+      long transferCount = Math.min(MAX_ACTIVE_QUEUE_SIZE - activeQueueSize, MAX_TRANSFER_COUNT);
 
-          if(transferCount == 0){
-             return;
-          }
+      if(transferCount == 0){
+          return;
+      }
 
-          Collection<WaitingDTO> tokenList = waitingQueueDAO.getAllWaitingTokens(transferCount);
+      Collection<WaitingDTO> tokenList = waitingQueueDAO.getAllWaitingTokens(transferCount);
 
-          if (tokenList.isEmpty()) {
-              return;
-          }
+      if (tokenList.isEmpty()) {
+          return;
+      }
 
-          activeQueueDAO.migrateTokensFromWaitingQueueToActiveQueue(tokenList);
+      activeQueueDAO.migrateTokensFromWaitingQueueToActiveQueue(tokenList);
 
-          // 토큰 목록을 Redis Pub/Sub을 통해 발행한다
-          // 발행한 토큰 목록은 WebSocket 서버에서 Redis Pub/Sub을 통해 구독한다
-          // 토큰 Pub/Sub의 목적은, 토큰이 활성화되었을 때, 웹소켓 클라이언트에게 알림을 주기 위함이다.
-          tokenPublisher.publishAllActiveTokens(tokenList);
+      // 토큰 목록을 Redis Pub/Sub을 통해 발행한다
+      // 발행한 토큰 목록은 WebSocket 서버에서 Redis Pub/Sub을 통해 구독한다
+      // 토큰 Pub/Sub의 목적은, 토큰이 활성화되었을 때, 웹소켓 클라이언트에게 알림을 주기 위함이다.
+      tokenPublisher.publishAllActiveTokens(tokenList);
 
-          // 토큰 목록을 대기열에서 삭제처리한다
-          waitingQueueDAO.deleteWaitingQueueTokens(tokenList);
+      // 토큰 목록을 대기열에서 삭제처리한다
+      waitingQueueDAO.deleteWaitingQueueTokens(tokenList);
 
-          Collection<WaitingDTO> waitingTokenList = waitingQueueDAO.getAllWaitingTokensWithRank();
-          tokenPublisher.publishAllWaitingTokens(waitingTokenList);
-
-        } finally {
-          lock.unlock();  // 작업 완료 후 락을 해제
-        }
+      Collection<WaitingDTO> waitingTokenList = waitingQueueDAO.getAllWaitingTokensWithRank();
+      tokenPublisher.publishAllWaitingTokens(waitingTokenList);
   }
 
 

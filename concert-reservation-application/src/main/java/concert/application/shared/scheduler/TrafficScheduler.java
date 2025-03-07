@@ -39,12 +39,14 @@ public class TrafficScheduler {
             log.info("[TRAFFIC] API: {}, Calls in Last 1 Min: {}", api, traffic);
         }
 
-        if (totalTraffic > queueActivationTrafficThreshold) {
+        long tps = totalTraffic / 60;
+
+        if (tps > queueActivationTrafficThreshold) {
             log.info("[QUEUE] Traffic exceeded 1200! Activating waiting queue...");
-            waitingQueueApplicationService.activateWaitingQueue(totalTraffic); // 대기열 활성화
-        } else if (totalTraffic < queueDeactivationTrafficThreshold) {
+            waitingQueueApplicationService.activateWaitingQueue(tps); // 대기열 활성화
+        } else if (tps < queueDeactivationTrafficThreshold) {
             log.info("[QUEUE] Traffic dropped below 800! Deactivating waiting queue...");
-            waitingQueueApplicationService.deactivateWaitingQueue(totalTraffic);
+            waitingQueueApplicationService.deactivateWaitingQueue(tps);
         }
     }
 }
