@@ -9,6 +9,8 @@
 ### 4. ['콘서트 좌석 5분 선점' 동시성 제어 보고서](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/CONCURRENCY_REPORT.md)
 ### 5. [Redis 분산락 Deep Dive 발표](https://www.canva.com/design/DAGVN6DetjU/mnwdH7gKAJyBjOb2c4_waA/edit)
 ### 6. [콘서트 티켓 예약을 위한 Redis 대기열 아키텍처 설계](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/concert-ticket-waiting-queue.md)
+### 7. [MSA 기반 서비스 분리 시, Saga 패턴을 활용한 분산 트랜잭션 적용 보고서](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/MSA_SAGA_PATTERN_REPORT.md)
+### 8. [MSA 기반 서비스 분리 시, Transactional Outbox Pattern 적용 보고서](https://github.com/LeeJaeYun7/concertTicket/blob/master/docs/MSA_KAFKA_TRANSACTIONAL_OUTBOX_PATTERN.md)
 
 ## 성능 개선
 
