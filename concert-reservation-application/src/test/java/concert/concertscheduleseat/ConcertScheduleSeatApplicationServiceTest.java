@@ -14,7 +14,6 @@ import concert.domain.concerthall.entities.ConcertHallSeatEntity;
 import concert.domain.member.entities.MemberEntity;
 import concert.domain.member.services.MemberService;
 import concert.domain.concert.services.ConcertScheduleSeatService;
-import concert.domain.shared.exceptions.CustomException;
 import concert.domain.shared.utils.TimeProvider;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +27,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
