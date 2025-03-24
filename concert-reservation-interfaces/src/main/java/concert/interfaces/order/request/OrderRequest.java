@@ -9,12 +9,12 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderRequest {
 
-    private String uuid;
+    private String token;
     private long concertScheduleId;
     private List<Long> concertScheduleSeatIds;
 
-    public OrderRequest(String uuid, long concertScheduleId, List<Long> concertScheduleSeatIds){
-        this.uuid = uuid;
+    public OrderRequest(String token, long concertScheduleId, List<Long> concertScheduleSeatIds){
+        this.token = token;
         this.concertScheduleId = concertScheduleId;
         this.concertScheduleSeatIds = concertScheduleSeatIds;
     }

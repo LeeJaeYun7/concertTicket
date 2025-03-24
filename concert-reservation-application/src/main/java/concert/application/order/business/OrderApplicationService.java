@@ -19,6 +19,7 @@ import concert.domain.order.entities.dao.OutboxEntityDAO;
 import concert.domain.order.exceptions.OrderException;
 import concert.domain.order.exceptions.OrderExceptionType;
 import concert.domain.order.txservices.OrderTxService;
+import concert.domain.waitingqueue.entities.dao.ActiveQueueDAO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,6 +32,7 @@ import java.util.List;
 @Slf4j
 public class OrderApplicationService {
 
+  private final ActiveQueueDAO activeQueueDAO;
   private final ApplicationJsonConverter applicationJsonConverter;
   private final OrderTxService orderTxService;
   private final ConcertScheduleSeatService concertScheduleSeatService;
@@ -42,6 +44,7 @@ public class OrderApplicationService {
 
   @Transactional
   public void createOrder(String uuid, long concertScheduleId, List<Long> concertScheduleSeatIds) {
+    activeQueueDAO.isTokenExistsInActiveQueue(uuid);
 
     long totalPrice = calculateTotalPrice(concertScheduleSeatIds);
 

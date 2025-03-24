@@ -81,7 +81,7 @@ public class ConcertScheduleSeatApplicationServiceTest {
 
       String token = "12345";
 
-      sut.reserveConcertScheduleSeats(token, List.of(concertScheduleSeat.getId()));
+      sut.reserveConcertScheduleSeats(token, uuid, List.of(concertScheduleSeat.getId()));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ConcertScheduleSeatApplicationServiceTest {
 
       String token = "12345";
 
-      assertThrows(NullPointerException.class, () -> sut.reserveConcertScheduleSeats(token, List.of(concertScheduleSeat.getId())));
+      assertThrows(NullPointerException.class, () -> sut.reserveConcertScheduleSeats(token, uuid, List.of(concertScheduleSeat.getId())));
     }
   }
 }
