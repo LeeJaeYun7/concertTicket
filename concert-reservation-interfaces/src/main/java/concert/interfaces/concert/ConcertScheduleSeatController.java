@@ -1,7 +1,9 @@
 package concert.interfaces.concert;
 
 import concert.application.concert.business.ConcertScheduleSeatApplicationService;
+import concert.domain.waitingqueue.entities.WaitingDTO;
 import concert.interfaces.concert.request.ConcertScheduleSeatsRequest;
+import concert.interfaces.concert.request.SeatNumbersRequest;
 import concert.interfaces.concert.response.ConcertScheduleSeatsResponse;
 import concert.interfaces.concert.response.SeatNumbersResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,13 @@ public class ConcertScheduleSeatController {
   private final ConcertScheduleSeatApplicationService concertScheduleSeatApplicationService;
 
   @GetMapping("/api/v1/concertScheduleSeat/active")
-  public ResponseEntity<SeatNumbersResponse> retrieveActiveConcertScheduleSeats(@RequestParam(value = "concertScheduleId") long concertScheduleId) {
-    List<Long> activeSeatNumbers = concertScheduleSeatApplicationService.getActiveConcertScheduleSeatNumbers(concertScheduleId);
+  public ResponseEntity<SeatNumbersResponse> retrieveActiveConcertScheduleSeats(@RequestBody SeatNumbersRequest seatNumbersRequest) {
+    String token = seatNumbersRequest.getToken();
+    WaitingDTO waitingDTO = WaitingDTO.parse(token);
+    String uuid = waitingDTO.getUuid();
+    long concertScheduleId = seatNumbersRequest.getConcertScheduleId();
+
+    List<Long> activeSeatNumbers = concertScheduleSeatApplicationService.getActiveConcertScheduleSeatNumbers(uuid, concertScheduleId);
     SeatNumbersResponse seatNumbersResponse = new SeatNumbersResponse(activeSeatNumbers);
 
     return ResponseEntity.status(HttpStatus.OK).body(seatNumbersResponse);
@@ -27,9 +34,12 @@ public class ConcertScheduleSeatController {
   @PostMapping("/api/v1/concertScheduleSeat/reservation")
   public ResponseEntity<ConcertScheduleSeatsResponse> reserveConcertScheduleSeats(@RequestBody ConcertScheduleSeatsRequest concertScheduleSeatsRequest) {
     String token = concertScheduleSeatsRequest.token();
+    WaitingDTO waitingDTO = WaitingDTO.parse(token);
+    String uuid = waitingDTO.getUuid();
+
     List<Long> concertScheduleSeatIds = concertScheduleSeatsRequest.concertScheduleSeatIds();
 
-    concertScheduleSeatApplicationService.reserveConcertScheduleSeats(token, concertScheduleSeatIds);
+    concertScheduleSeatApplicationService.reserveConcertScheduleSeats(token, uuid, concertScheduleSeatIds);
 
     ConcertScheduleSeatsResponse response = new ConcertScheduleSeatsResponse(true);
     return ResponseEntity.status(HttpStatus.OK).body(response);

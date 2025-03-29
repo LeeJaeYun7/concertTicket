@@ -39,6 +39,15 @@ public class ActiveQueueDAO {
         return activeQueue.size();
     }
 
+    public boolean isTokenExistsInActiveQueue(String uuid){
+        RMapCache<String, String> activeQueue = redisson.getMapCache(RedisKey.ACTIVE_QUEUE);
+
+        if(!activeQueue.containsKey(uuid)){
+            throw new RuntimeException();
+        }
+        return true;
+    }
+
 
     public boolean isTokenExistsInActiveQueue(WaitingDTO waitingDTO){
         RMapCache<String, String> activeQueue = redisson.getMapCache(RedisKey.ACTIVE_QUEUE);  // RMapCache 사용

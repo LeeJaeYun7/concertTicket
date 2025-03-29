@@ -127,7 +127,8 @@ public class ConcertScheduleEntitySeatConcurrencyIntegrationTest {
         executorService.submit(() -> {
           try {
             String token = "12345";
-            concertScheduleSeatApplicationService.reserveConcertScheduleSeats(token, List.of(1L));
+            String uuid = "1234";
+            concertScheduleSeatApplicationService.reserveConcertScheduleSeats(token, uuid, List.of(1L));
             successCount.incrementAndGet();
           } finally {
             latch.countDown();

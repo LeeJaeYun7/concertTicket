@@ -5,6 +5,7 @@ import concert.domain.concert.services.ConcertService;
 import concert.domain.concerthall.services.ConcertHallSeatService;
 import concert.domain.concerthall.entities.ConcertHallSeatEntity;
 import concert.domain.concert.services.ConcertScheduleSeatService;
+import concert.domain.waitingqueue.entities.dao.ActiveQueueDAO;
 import concert.infrastructure.distributedlock.dao.TokenConcertScheduleSeatDAO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,13 +18,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ConcertScheduleSeatApplicationService {
 
+  private final ActiveQueueDAO activeQueueDAO;
   private final ConcertService concertService;
   private final ConcertHallSeatService concertHallSeatService;
   private final ConcertScheduleService concertScheduleService;
   private final ConcertScheduleSeatService concertScheduleSeatService;
   private final TokenConcertScheduleSeatDAO tokenConcertScheduleSeatDAO;
 
-  public List<Long> getActiveConcertScheduleSeatNumbers(long concertScheduleId) {
+  public List<Long> getActiveConcertScheduleSeatNumbers(String uuid, long concertScheduleId) {
+    activeQueueDAO.isTokenExistsInActiveQueue(uuid);
     concertScheduleService.getConcertScheduleById(concertScheduleId);
 
     long concertId = concertScheduleService.getConcertScheduleById(concertScheduleId).getConcertId();
@@ -34,7 +37,9 @@ public class ConcertScheduleSeatApplicationService {
   }
 
   @Transactional
-  public void reserveConcertScheduleSeats(String token, List<Long> concertScheduleSeatIds) {
+  public void reserveConcertScheduleSeats(String token, String uuid, List<Long> concertScheduleSeatIds) {
+    activeQueueDAO.isTokenExistsInActiveQueue(uuid);
+
     for(long concertScheduleSeatId: concertScheduleSeatIds){
       concertScheduleSeatService.reserveConcertScheduleSeat(token, concertScheduleSeatId);
 

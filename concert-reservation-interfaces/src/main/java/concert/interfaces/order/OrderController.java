@@ -1,6 +1,7 @@
 package concert.interfaces.order;
 
 import concert.application.order.business.OrderApplicationService;
+import concert.domain.waitingqueue.entities.WaitingDTO;
 import concert.interfaces.order.request.OrderRequest;
 import concert.interfaces.order.response.OrderResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,11 @@ public class OrderController {
 
   @PostMapping("/api/v1/order")
   public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
-    String uuid = orderRequest.getUuid();
+
+    String token = orderRequest.getToken();
+    WaitingDTO waitingDTO = WaitingDTO.parse(token);
+    String uuid = waitingDTO.getUuid();
+
     long concertScheduleId = orderRequest.getConcertScheduleId();
     List<Long> concertScheduleSeatIds = orderRequest.getConcertScheduleSeatIds();
 
